@@ -1,0 +1,158 @@
+generated: '2026-09-19'
+method: probed
+source: >-
+  Live GET probes of the named /.well-known/* path list on marginalia.polycode.co.uk (Website, OpenAPI servers[]
+  host and A2A JSON-RPC host — one origin: S3 static site + API Gateway behind CloudFront), polycode.co.uk and
+  www.polycode.co.uk (the registrable apex the agent card declares as provider.url), 2026-09-19. Every row below is
+  a request that was actually issued; every status is the one returned. Only 200s carrying a real, correctly-typed
+  document were saved.
+summary:
+  hosts_probed: 3
+  paths_probed: 42
+  documents_served: 2
+  hit_count: 1
+  path_echo_control: passed
+  soft_404_control: failed-for-extensionless-paths
+  note: >-
+    One real document: the A2A agent card, served with application/json at both the canonical /.well-known/agent-card.json
+    and the legacy /.well-known/agent.json (byte-identical, 2,547 bytes, both checked into the public repository at
+    app/web/.well-known/). The host has TWO miss behaviours. A path WITH a file extension that does not exist as an
+    S3 object returns 403 application/xml AccessDenied (111 bytes) — a negative-control
+    /.well-known/polycode-co-uk-negative-control-9c41e2.json returned exactly that, so the host does not echo
+    arbitrary JSON paths. A path WITHOUT an extension is rewritten to the SPA's index.html and returns 200 text/html
+    (11,792 bytes, the same ETag as /), so openid-configuration, oauth-authorization-server, oauth-protected-resource,
+    api-catalog and x402 all answer 200 with the chat app's HTML shell; those rows are recorded as spa-shell and are
+    NOT documents. Nothing OAuth/OIDC-shaped exists for API callers (the browser login is Amazon Cognito on a
+    different host, not probed). No security.txt, apis.json, ai-plugin.json, ucp/acp, AAuth or MCP discovery
+    documents. The apex polycode.co.uk and www both CNAME to a CloudFront distribution with no address (status 0 on
+    every path). robots.txt is not served (403), so there is no Content-Signal or AI-crawler consent statement.
+hosts:
+- host: marginalia.polycode.co.uk
+  role: Website, API (OpenAPI servers[]), A2A JSON-RPC host — one origin (S3 + API Gateway behind CloudFront)
+  resolves: true
+  documents:
+  - path: /.well-known/agent-card.json
+    status: 200
+    content_type: application/json
+    bytes: 2547
+    file: ../a2a/polycode-co-uk-agent-card.json
+    standard: A2A Agent Card (protocolVersion 0.3.0)
+    note: Saved verbatim under a2a/ and graded in a2a/polycode-co-uk-a2a.yml (conformant).
+  - path: /.well-known/agent.json
+    status: 200
+    content_type: application/json
+    bytes: 2547
+    file: ../a2a/polycode-co-uk-agent-card.json
+    standard: A2A Agent Card (legacy pre-0.3 path)
+    note: Byte-identical to agent-card.json (cmp identical); not saved twice.
+  - path: /.well-known/security.txt
+    status: 403
+    content_type: application/xml
+    note: S3 AccessDenied — not served.
+  - path: /.well-known/openid-configuration
+    status: 200
+    content_type: text/html
+    bytes: 11792
+    result: spa-shell
+    real_document: false
+    note: SPA catch-all index.html, identical to /. Not an OIDC discovery document.
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: text/html
+    bytes: 11792
+    result: spa-shell
+    real_document: false
+    note: SPA catch-all index.html. Not RFC 8414 metadata.
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    content_type: text/html
+    bytes: 11792
+    result: spa-shell
+    real_document: false
+    note: SPA catch-all index.html. Not RFC 9728 metadata.
+  - path: /.well-known/api-catalog
+    status: 200
+    content_type: text/html
+    bytes: 11792
+    result: spa-shell
+    real_document: false
+    note: SPA catch-all index.html. Not an RFC 9727 linkset.
+  - path: /.well-known/api-catalog.json
+    status: 403
+    content_type: application/xml
+  - path: /.well-known/ai-plugin.json
+    status: 403
+    content_type: application/xml
+  - path: /.well-known/ucp.json
+    status: 403
+    content_type: application/xml
+  - path: /.well-known/acp.json
+    status: 403
+    content_type: application/xml
+  - path: /.well-known/aauth-resource.json
+    status: 403
+    content_type: application/xml
+  - path: /.well-known/apis.json
+    status: 403
+    content_type: application/xml
+  - path: /apis.json
+    status: 403
+    content_type: application/xml
+  - path: /apis.yml
+    status: 403
+    content_type: application/xml
+  - path: /.well-known/mcp.json
+    status: 403
+    content_type: application/xml
+  - path: /.well-known/x402
+    status: 200
+    content_type: text/html
+    bytes: 11792
+    result: spa-shell
+    real_document: false
+  - path: /robots.txt
+    status: 403
+    content_type: application/xml
+    note: Not served; no Content-Signal line, no crawler directives.
+  - path: /llms.txt
+    status: 403
+    content_type: application/xml
+  controls:
+  - path: /.well-known/polycode-co-uk-negative-control-9c41e2.json
+    status: 403
+    content_type: application/xml
+    note: Negative control with an extension — the host does not echo unknown .well-known JSON paths (path_echo_control passed).
+  - path: /.well-known/apievangelist-negative-control-9c41e2
+    status: 200
+    content_type: text/html
+    bytes: 11792
+    result: spa-shell
+    note: Negative control without an extension — proves the extensionless 200s above are the SPA catch-all, not documents.
+- host: polycode.co.uk
+  role: Registrable apex; provider.url in the agent card; DNS CNAME d76qopfbpb38m.cloudfront.net with no resolvable address
+  resolves: false
+  documents:
+  - {path: /.well-known/security.txt, status: 0, note: host does not resolve}
+  - {path: /.well-known/openid-configuration, status: 0}
+  - {path: /.well-known/oauth-authorization-server, status: 0}
+  - {path: /.well-known/oauth-protected-resource, status: 0}
+  - {path: /.well-known/api-catalog, status: 0}
+  - {path: /.well-known/ai-plugin.json, status: 0}
+  - {path: /.well-known/agent-card.json, status: 0}
+  - {path: /.well-known/agent.json, status: 0}
+  - {path: /.well-known/apis.json, status: 0}
+  - {path: /apis.json, status: 0}
+  - {path: /.well-known/aauth-resource.json, status: 0}
+- host: www.polycode.co.uk
+  role: www alias; CNAME to the same unresolvable CloudFront distribution
+  resolves: false
+  documents:
+  - {path: /.well-known/security.txt, status: 0, note: host does not resolve}
+  - {path: /.well-known/openid-configuration, status: 0}
+  - {path: /.well-known/oauth-authorization-server, status: 0}
+  - {path: /.well-known/oauth-protected-resource, status: 0}
+  - {path: /.well-known/api-catalog, status: 0}
+  - {path: /.well-known/agent-card.json, status: 0}
+  - {path: /.well-known/agent.json, status: 0}
+  - {path: /.well-known/apis.json, status: 0}
+  - {path: /apis.json, status: 0}

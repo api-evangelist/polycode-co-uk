@@ -1,0 +1,137 @@
+generated: '2026-09-19'
+method: searched
+source: https://gitlab.com/polycode-projects/marginalia/-/blob/main/README.md
+sources:
+- openapi/polycode-co-uk-marginalia-openapi.json
+- a2a/polycode-co-uk-agent-card.json
+- https://gitlab.com/polycode-projects/marginalia/-/blob/main/README.md
+- https://gitlab.com/polycode-projects/marginalia/-/blob/main/_developers/ETHICS.md
+- https://gitlab.com/polycode-projects/marginalia/-/blob/main/cli/bin/marginalia.mjs
+- live anonymous responses on https://marginalia.polycode.co.uk 2026-09-19
+cross_links:
+  authentication: authentication/polycode-co-uk-authentication.yml
+  errors: errors/polycode-co-uk-problem-types.yml
+  lifecycle: lifecycle/polycode-co-uk-lifecycle.yml
+  rate_limits: rate-limits/polycode-co-uk-rate-limits.yml
+  sandbox: sandbox/polycode-co-uk-sandbox.yml
+authentication:
+  style: public by default; optional X-API-Key header (private graphs); Tier-1 browser login (Google via Amazon Cognito) for account operations
+  see: authentication/polycode-co-uk-authentication.yml
+base_url: https://marginalia.polycode.co.uk/api
+content_type: application/json on every request body and response; A2A message/stream returns text/event-stream (SSE)
+asynchrony:
+  pattern: task-poll
+  mechanism: >-
+    POST /api/chat (postChat) answers with a task id ("returns 202 + a task id" per the summary; the spec's
+    declared success code is 200) and the reply is collected by polling GET /api/chat/result?task=<id>
+    (getChatResult) until state is completed (with reply) or failed. On the A2A surface message/send returns a
+    working Task to poll on a slow turn, and message/stream streams over SSE.
+sessions:
+  mechanism: >-
+    sessionUuid (REST) / contextId (A2A) is minted by the server when omitted and returned; reuse it to keep
+    conversation context. Possession of a session UUID is possession of the session ("URL == identity").
+  optional_identity: visitorId (pseudonymous, opt-in); a screened non-PII label via postVisitorLabel.
+idempotency:
+  supported: false
+  coverage: none
+  scope: []
+  mechanism: null
+  note: >-
+    No Idempotency-Key header, request_id or replay semantics are documented for any of the 24 write operations,
+    and no idempotency parameter appears in the spec. postChat is safe to poll but not safe to repeat: each POST is
+    a new turn that enters the session (and, unless volatile, the shared memory graph). A2A tasks/get is the
+    read-side check available to a client that lost a response.
+dry_run:
+  supported: true
+  coverage: partial
+  mechanism: volatile flag
+  scope: [postChat, A2A message/send and message/stream (documented for the buffered alias), CLI --volatile]
+  note: >-
+    volatile: true (requestBody property on postChat, default false; CLI "--volatile  chat turn not ingested into
+    shared memory") executes the turn and returns a reply but keeps it out of the shared memory graph — a
+    no-persistence mode for the main write, not a validation-only rehearsal. The x-sandbox: true header (CLI
+    --sandbox, "route to the sandbox graph") diverts a turn to a separate sandbox graph; see sandbox/.
+reversibility:
+  grade: documented
+  docs: https://gitlab.com/polycode-projects/marginalia/-/blob/main/_developers/ETHICS.md
+  note: >-
+    A reversal path exists for the consequential write (a message entering the shared memory graph): UK GDPR
+    erasure by emailing antony@polycode.co.uk with the session UUID, with a stated operator turnaround of
+    "best-effort and typically within 7 days" and a described purge mechanism (memory-purge on the leaf and its
+    descendants, downstream summaries re-aggregated). That is a response-time expectation, not a window inside
+    which reversal is guaranteed, and the path is an email rather than an operation, so this grades documented
+    (0.4), not verified. Private-graph writes have in-API reversals with no stated window. Nothing below asserts a
+    window the provider has not written.
+  write_surfaces:
+  - operation: postChat / A2A message/send (non-volatile)
+    action: A turn enters the session and the shared, PII-redacted memory graph; republished under CC-BY-SA 4.0
+    reversal: email erasure request with the session UUID (ETHICS.md "Visitor rights")
+    window: 'not stated as a window; turnaround "best-effort and typically within 7 days"'
+    api_reversal: none
+    avoid: 'send volatile: true, or route to the sandbox graph with x-sandbox'
+  - operation: createPrivateGraph / postKeys
+    action: Creates a private graph and mints an API key
+    reversal: >-
+      deletePrivateGraph ("Delete a private graph + its tree, keys, and default pointer"); postKeys with
+      action "delete" and the key hash deletes a single key
+    window: not stated
+  - operation: renamePrivateGraph
+    action: Renames a graph
+    reversal: renamePrivateGraph again
+    window: not stated
+  - operation: setMyDefaultGraph / setUserDefault
+    action: Changes the caller's default graph
+    reversal: clearUserDefault ("revert to the shared graph")
+    window: not stated
+  - operation: postProjectOp
+    action: 'Project lifecycle op: reopen | conclude | archive | delete'
+    reversal: reopen reverses conclude/archive; delete has no documented reversal
+    window: not stated
+  - operation: setPromptNote
+    action: Sets a free-text note injected into the graph's system prompt
+    reversal: setPromptNote with an empty note ("Empty note clears it")
+    window: not stated
+  - operation: postFlag
+    action: Flags a memory node for operator review
+    reversal: none documented (operator resolves via the admin CLI)
+    window: not stated
+  - operation: postVisitorLabel / postSessionIntroduction
+    action: Sets a visitor label or session introduction
+    reversal: resubmit; the UI notes "Leave it blank to stay anonymous"
+    window: not stated
+pagination:
+  style: none
+  params: {getSessionsSearch: [q, limit], listGraphs: [all]}
+  response_fields: null
+  note: 'Collections return whole arrays ("graphs": [...], "projects": [...]); getSessionsSearch accepts limit only, listGraphs "?all=1 bypasses the margin cap".'
+filtering_and_scoping:
+  graph_selection: 'graphId in the body (postChat), graph query on getProjects, graphId path segment on graph-scoped reads, or "graphId via X-API-Key else the shared default" (postMechanicalCompletion)'
+  usage_scope: getUsage takes scope and scopeId
+field_expansion: none
+metadata: none
+request_tracing:
+  request_id_header: none documented; API Gateway returns apigw-requestid, and the A2A Lambda returns x-amzn-requestid and x-amzn-trace-id
+  traceparent: accepted as a CORS request header on /api/a2a (W3C Trace Context); propagation not verified
+versioning:
+  style: none in the path (except /api/v1/chat/completions); deployed build self-reported by getStatus (commit, branch, built_at)
+  see: lifecycle/polycode-co-uk-lifecycle.yml
+error_envelope:
+  shape: '{"error": "<message>"}; 404 adds path and method; JSON-RPC 2.0 error objects on /api/a2a'
+  see: errors/polycode-co-uk-problem-types.yml
+rate_limit_signaling:
+  headers: none observed (no RateLimit-*, X-RateLimit-*, Retry-After)
+  runtime_signal: GET /api/budget (used_pct / available_pct per daily, monthly, session, synth lane; status verb) and GET /api/status (cap)
+  see: rate-limits/polycode-co-uk-rate-limits.yml
+cors:
+  allowed_origin: '*'
+  allowed_headers: [content-type, accept, traceparent, x-api-key]
+  preflight: OPTIONS /api/chat -> 204
+inbound_webhooks:
+  note: >-
+    The API RECEIVES webhooks rather than emitting them: postGithubHook (X-Hub-Signature-256), postGitlabHook
+    (X-Gitlab-Token) and postHooksPush (X-API-Key, batched messages) queue events into a bound graph. No outbound
+    webhook or event subscription is published, so no Webhooks/AsyncAPI pointer is emitted.
+data_licensing:
+  contributions: CC-BY-SA 4.0 (welcome modal, ETHICS.md)
+  code: AGPL-3.0-only
+  agent_guidance: Do not send personal data about identifiable third parties; content is PII-redacted at ingest but retained indefinitely in summary form.

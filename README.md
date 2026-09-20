@@ -64,5 +64,6 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Polycode Limited is a company surfaced via the API Evangelist harvest backlog (source: a2a-registry) and added to the network as a stub for full-pipeline profiling.
-- https://polycode.co.uk/
+Polycode Limited is a UK information-technology consultancy (Companies House 10172940, Leeds) that operates marginalia, a small public chat experiment built on a shared, provenance-tracked memory graph. It publishes a public REST API (OpenAPI 3.0.3, 50 operations, no key for reads and chat), an A2A 0.3.0 agent card with a live JSON-RPC endpoint, an OpenAI-shaped mechanical completion shim, a first-party CLI and the AGPL-3.0 source. The corporate apex polycode.co.uk did not resolve when profiled; the product host is the live web presence.
+- https://marginalia.polycode.co.uk/
+- https://gitlab.com/polycode-projects/marginalia

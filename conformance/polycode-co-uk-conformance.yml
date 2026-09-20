@@ -1,0 +1,79 @@
+generated: '2026-09-19'
+method: derived
+source: openapi/polycode-co-uk-marginalia-openapi.json + a2a/polycode-co-uk-agent-card.json + live probes 2026-09-19
+note: >-
+  Derived from the contract, the agent card and anonymous live responses. No published compliance programme,
+  certification or trust page exists (probe-security-programs.py: vdp=none trust=none), so no Compliance pointer
+  is emitted. Domain-standard signature: the A2A agent card and the JSON-RPC endpoint are the contract-declared
+  standard for this market (agent-to-agent chat); the OpenAI Chat Completions request/response shape at
+  /api/v1/chat/completions is the de-facto interoperability standard for LLM endpoints and is declared in the spec
+  itself (operationId postMechanicalCompletion).
+standards:
+- id: a2a
+  name: Agent2Agent protocol
+  conforms: true
+  version: 0.3.0
+  evidence: a2a/polycode-co-uk-agent-card.json (protocolVersion 0.3.0, capabilities object, skills array); live POST tasks/get returned the A2A -32001 TaskNotFoundError.
+  grade: conformant
+- id: json-rpc-2.0
+  conforms: true
+  evidence: >-
+    https://marginalia.polycode.co.uk/api/a2a — GET returns a JSON-RPC 2.0 error object with code -32600
+    (Invalid Request); an unknown method returns -32601.
+- id: openapi-3.0
+  conforms: true
+  evidence: openapi/polycode-co-uk-marginalia-openapi.json — openapi 3.0.3, 50 operations, every operation carries a unique operationId and a summary.
+- id: openai-chat-completions-shape
+  name: OpenAI Chat Completions request/response shape
+  conforms: true
+  domain_standard: true
+  evidence: 'openapi paths./api/v1/chat/completions.post (operationId postMechanicalCompletion) — "OpenAI-shaped MECHANICAL completion shim: { messages } ..."; README section "Mechanical (zero-token) answers".'
+  note: Declared as OpenAI-shaped; token usage is always zero and a marginalia provenance receipt is added. Not independently tested.
+- id: rfc8615-well-known
+  conforms: true
+  evidence: /.well-known/agent-card.json and /.well-known/agent.json served with application/json.
+- id: cors
+  conforms: true
+  evidence: >-
+    OPTIONS /api/chat -> 204; POST /api/a2a responds access-control-allow-origin "*" and
+    access-control-allow-headers "content-type, accept, traceparent, x-api-key".
+- id: w3c-trace-context
+  conforms: partial
+  evidence: traceparent is an allowed CORS request header on /api/a2a; propagation was not verified.
+- id: oauth2
+  conforms: false
+  evidence: No oauth2 securityScheme in the spec; browser login is Google via Amazon Cognito (/auth/login 302 to a Cognito authorize URL) and is not an API authorization surface.
+- id: oidc
+  conforms: false
+  evidence: No openIdConnect scheme for API callers; /.well-known/openid-configuration on the API host is the SPA shell.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: 'Errors are {"error": "<message>"} with application/json, not application/problem+json.'
+- id: rfc9728-protected-resource-metadata
+  conforms: false
+  evidence: /.well-known/oauth-protected-resource returns the SPA shell (soft-404).
+- id: rfc9727-api-catalog
+  conforms: false
+  evidence: /.well-known/api-catalog returns the SPA shell; /.well-known/api-catalog.json 403.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt 403.
+- id: idempotency-key
+  conforms: false
+  evidence: No Idempotency-Key parameter or documented replay protection anywhere in the 24 write operations.
+- id: pagination
+  conforms: partial
+  evidence: getSessionsSearch takes a limit query parameter and listGraphs an all flag; no cursor or page parameters and no documented response envelope.
+- id: rate-limit-headers
+  conforms: false
+  evidence: No RateLimit-*, X-RateLimit-* or Retry-After headers observed on /api/status, /api/graphs or /api/a2a responses.
+- id: sparql-1.1
+  conforms: true
+  scope: internal-mechanism
+  evidence: README "The pipeline" — questions are formulated into SPARQL and solved by Oxigraph over an OWL 2 RL-typed RDF projection; not exposed as a public SPARQL endpoint.
+- id: owl-2-rl
+  conforms: true
+  scope: internal-mechanism
+  evidence: >-
+    getEntities returns an "Extracted OWL types view - domain classes, object properties, and individuals";
+    README names the OWL 2 RL profile and PROV-O provenance.

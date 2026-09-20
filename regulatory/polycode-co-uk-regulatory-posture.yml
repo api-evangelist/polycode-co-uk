@@ -1,0 +1,98 @@
+generated: '2026-09-19'
+method: searched
+probe: true
+source: https://gitlab.com/polycode-projects/marginalia/-/blob/main/_developers/ETHICS.md
+probed:
+- {url: 'https://marginalia.polycode.co.uk/', status: 200, fetched: '2026-09-19', note: 'static index.html carries the privacy, disclaimer and terms texts inline (ids legal-text-privacy / legal-text-disclaimer / legal-text-terms) and the flag-this-memory dialog'}
+- {url: 'https://gitlab.com/polycode-projects/marginalia/-/blob/main/_developers/ETHICS.md', status: 200, fetched: '2026-09-19', note: 'the visitor-rights contract, last reviewed 2026-05-27'}
+- {url: 'https://gitlab.com/polycode-projects/marginalia/-/blob/main/README.md', status: 200, fetched: '2026-09-19', note: '"Operating" section states the hosting region and model vendors'}
+- {url: 'https://marginalia.polycode.co.uk/privacy', status: 200, note: 'SPA shell (soft-404) — the policy text is on the root page, not at this route'}
+- {url: 'https://marginalia.polycode.co.uk/terms', status: 200, note: SPA shell (soft-404)}
+- {url: 'https://marginalia.polycode.co.uk/.well-known/security.txt', status: 403}
+- {url: 'https://marginalia.polycode.co.uk/accessibility', status: 200, note: 'not probed separately; every extensionless path returns the same shell, and no accessibility statement exists in the HTML, the client modules or the repository'}
+- {url: 'https://polycode.co.uk/', status: 0, note: corporate apex does not resolve; no legal pages exist there}
+summary: >-
+  Polycode Limited publishes an unusually explicit visitor-rights contract for a service this small: a UK GDPR
+  statement with named rights, a request channel and a stated turnaround; an AI-system disclaimer that names the
+  model, the hosting region and the operator before the first message; and a working notice channel (flag a
+  memory, with a reason, backed by POST /api/flag and an operator resolve flow). Four of the fourteen horizontal
+  signals meet the substance bar. What it does not publish: a subprocessor table, an SBOM, a support period, an
+  accessibility statement, a transparency report, an incident-notification commitment, a GPC statement, an
+  age-assurance mechanism or an export/portability commitment (postExport is documented as a stub).
+signals:
+  data_subject_request:
+    url: https://gitlab.com/polycode-projects/marginalia/-/blob/main/_developers/ETHICS.md
+    section: Visitor rights
+    channel: antony@polycode.co.uk
+    rights_named: [access, rectification, erasure]
+    stated_sla: 'Operator turnaround is best-effort and typically within 7 days.'
+    identifier_required: session UUID
+    evidence:
+    - source: https://gitlab.com/polycode-projects/marginalia/-/blob/main/_developers/ETHICS.md
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: 'UK GDPR rights of access, rectification, and erasure apply. Because sessions are pseudonymous, the operator needs the session UUID to locate a visitor''s records — paste it in an email to antony@polycode.co.uk. Operator turnaround is best-effort and typically within 7 days.'
+    - source: https://marginalia.polycode.co.uk/
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: 'UK GDPR rights of access, rectification, and erasure apply to your personal information. Email antony@polycode.co.uk with your session UUID if you need something pulled.'
+    note: >-
+      Published on the chat surface itself and in the repository's ETHICS.md, with the erasure mechanism described
+      (memory-purge of the leaf and descendants, downstream summaries re-aggregated, an audit row written). No
+      intake form or API endpoint; the channel is email.
+  ai_transparency:
+    url: https://marginalia.polycode.co.uk/
+    section: Disclaimer (legal-text-disclaimer, shown before the first message)
+    discloses: [that the visitor is talking to an AI system, the model (Amazon Nova Pro per the page; Claude Haiku 4.5 via Bedrock per README and the live chat_model field), the hosting region eu-west-2, the operator, that conversations are not confidential]
+    evidence:
+    - source: https://marginalia.polycode.co.uk/
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: 'The graph is an AI system. Its replies can be wrong, biased, outdated, or hallucinated. Do not rely on them for medical, legal, financial, safety, or any other consequential decision. ... Bedrock model: Amazon Nova Pro · Region: eu-west-2 · Operator: Polycode Limited (UK).'
+    - source: https://gitlab.com/polycode-projects/marginalia/-/blob/main/_developers/ETHICS.md
+      http_status: 200
+      quote: 'AI output disclaimer — The graph is an AI system. ... The <aside id="terms-block"> on the chat surface makes this explicit to visitors before they send their first message.'
+    note: The page text still names Amazon Nova Pro while GET /api/budget reports chat_model eu.anthropic.claude-haiku-4-5; the disclosure is present, the model name on it is stale.
+  notice_and_action:
+    url: https://marginalia.polycode.co.uk/
+    section: Flag this memory (flag-dialog)
+    api: https://marginalia.polycode.co.uk/api/flag
+    operationId: postFlag
+    reasons: [factually incorrect, harmful or unsafe, discloses something private, other]
+    evidence:
+    - source: https://marginalia.polycode.co.uk/
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: 'Flag this memory — Memories are shared across all visitors. If something here is incorrect, harmful, or shouldn''t be in the graph, tell the operator.'
+    - source: openapi/polycode-co-uk-marginalia-openapi.json
+      quote: 'POST /api/flag (postFlag) — Flag a memory node for operator review. Body: target, reason, note.'
+    - source: https://gitlab.com/polycode-projects/marginalia/-/blob/main/_developers/ETHICS.md
+      quote: 'Operator flag flow: visitor flag → SES email → admin CLI resolve.' 
+    note: A user-facing notice channel with a documented action flow behind it. No statement of decision timelines or appeal.
+  data_residency:
+    url: https://gitlab.com/polycode-projects/marginalia/-/blob/main/README.md
+    section: Operating
+    regions: [eu-west-2]
+    stated: 'Powered by Anthropic Claude Haiku 4.5 via Amazon Bedrock in eu-west-2 (with Amazon Nova-Lite for aggregation and Titan V2 for embeddings)'
+    evidence:
+    - source: https://gitlab.com/polycode-projects/marginalia/-/blob/main/README.md
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: 'Powered by **Anthropic Claude Haiku 4.5 via Amazon Bedrock** in `eu-west-2`'
+    - source: https://marginalia.polycode.co.uk/
+      http_status: 200
+      quote: 'Region: eu-west-2 · Operator: Polycode Limited (UK)'
+    note: >-
+      A single-region statement of where inference and storage run (AWS London), published on the chat surface and
+      in the README. It is a disclosure, not a residency option a customer can choose, and it is recorded as such.
+not_recorded:
+  subprocessors: 'Vendors are named (Amazon Bedrock / Anthropic / Amazon Nova / Titan, Tavily web search, AWS SES) across README and ETHICS.md but there is no dated subprocessor table — below the substance bar.'
+  training_data_summary: 'ETHICS.md states "The redacted material is not used in training sets" — a statement about the provider''s use of visitor data, not a summary of a model''s training data.'
+  incident_notification: 'No breach-notification commitment or SLA anywhere found.'
+  age_assurance: 'No age statement or mechanism on the chat surface, in ETHICS.md or in the terms text.'
+  global_privacy_control: 'No GPC statement; not tested by header, per the rule.'
+  accessibility_conformance: 'No accessibility statement, VPAT or WCAG claim in the HTML, client modules or repository.'
+  sbom: 'None published; never derived. (The repo has a check:licences script and an npm audit script, which are not an SBOM.)'
+  support_lifetime: 'None; the service is described as an experiment with no stated support period.'
+  transparency_report: 'None.'
+  exit_assistance: 'POST /api/graph/{graphId}/export (postExport) is documented as "Export a graph (stub)"; visitor sessions are URL-addressable and readable via getSessionHistory, but no portability commitment is stated.'

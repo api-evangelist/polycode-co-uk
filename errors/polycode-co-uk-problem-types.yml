@@ -1,0 +1,50 @@
+generated: '2026-09-19'
+method: derived
+source: openapi/polycode-co-uk-marginalia-openapi.json + live unauthenticated responses 2026-09-19
+format: json-error-object
+envelope:
+  content_type: application/json
+  shape: '{"error": "<human-readable message>"}'
+  extra_fields_seen: [path, method]
+  note: >-
+    The spec declares only 200 and (on writes) a bare 400 "Bad request" with no schema. The shapes below were read
+    from live anonymous responses; the JSON-RPC surface at /api/a2a follows JSON-RPC 2.0 error objects instead.
+problems:
+- status: 400
+  title: Bad request
+  source_operation: 'every POST operation (24) declares it: openapi/polycode-co-uk-marginalia-openapi.json#postChat, #createPrivateGraph, #postFlag, ...'
+  observed: 'GET /api/chat/result without ?task= -> 400 {"error":"task query param required"}'
+  remediation: Send the required body or query field named in the message (postChat requires userMessage; getChatResult requires task).
+- status: 401
+  title: Login required
+  observed: 'GET /api/keys -> 401 {"error":"login required"}'
+  applies_to: [getKeys, postKeys, createPrivateGraph, setMyDefaultGraph, clearUserDefault, setUserDefault, deletePrivateGraph, renamePrivateGraph, setRepo, getPromptNote, setPromptNote, postProjectOp]
+  remediation: Complete the Tier-1 browser login at /auth/login (Google via Amazon Cognito); these operations are summarised "(Tier-1)" or "(Owner/Admin)" in the spec.
+- status: 401
+  title: API key required
+  observed: 'GET /api/keys/whoami -> 401 {"error":"send the key as X-API-Key"}'
+  applies_to: [whoamiKey, postHooksPush]
+  remediation: Send the private-graph key in the X-API-Key header.
+- status: 401
+  title: Bad webhook signature or unbound graph
+  source_operation: openapi/polycode-co-uk-marginalia-openapi.json#postGithubHook
+  evidence: 'Summary text: "401 on bad signature or an unbound graph" (X-Hub-Signature-256 HMAC; X-Gitlab-Token on postGitlabHook).'
+- status: 404
+  title: Not found
+  observed: 'GET /api/docs -> 404 {"error":"not found","path":"/api/docs","method":"GET"}; POST /api/mcp -> 404 with method POST.'
+  remediation: The route does not exist under /api; consult the OpenAPI. Note that extensionless non-/api paths return the SPA shell with 200 rather than a 404.
+- status: 403
+  title: Access denied (static host)
+  observed: 'GET /openapi.json, /llms.txt, /.well-known/security.txt -> 403 application/xml AccessDenied from S3.'
+  note: Static-object misses on the CloudFront/S3 web host, not an API authorization error.
+jsonrpc_errors:
+  endpoint: https://marginalia.polycode.co.uk/api/a2a
+  observed:
+  - {code: -32600, message: Invalid Request, when: GET on the endpoint}
+  - {code: -32601, message: 'Method not found: agent/getAuthenticatedExtendedCard', when: unimplemented method}
+  - {code: -32001, message: 'task not found: <id>', when: tasks/get for an unknown task id (A2A TaskNotFoundError)}
+cap_exhaustion:
+  note: >-
+    The provider documents that over-cap traffic is "refused cleanly" and that the service auto-enters a degraded
+    mode on the daily spend cap (README "Operating modes"; ETHICS.md "Operator-side controls"); the status code and
+    body of that refusal are not published and were not provoked.

@@ -1,0 +1,40 @@
+generated: '2026-09-19'
+method: probed
+source: https://marginalia.polycode.co.uk/api/budget
+docs: https://gitlab.com/polycode-projects/marginalia/-/blob/main/README.md
+limit_count: 3
+note: >-
+  marginalia has no per-client request rate limit and returns no rate-limit headers; what it publishes instead are
+  OPERATOR SPEND CAPS — hard daily and monthly GBP/USD ceilings on model spend, with per-session, synthesis and
+  ingest carve-outs — surfaced live through GET /api/budget and GET /api/status. The numeric daily cap is an SSM
+  parameter the operator changes without a deploy, and the three public documents disagree on its value (ETHICS.md
+  2026-05-27: "£3/day cap"; README: "the £10/day cap"; NEXT.md 2026-07-28: "cap dropped to £5/day"), so no single
+  number is asserted here: the runtime signal is the percentage fields on /api/budget.
+limits:
+- scope: deployment-wide (all callers), per UTC day
+  kind: spend cap (GBP, displayed in USD)
+  limit: 'not stated as one number — see note (£3 / £5 / £10 per day across the three sources); runtime: used_pct.daily and available_pct.daily on /api/budget'
+  window: UTC day ("a fresh UTC day starts clean")
+  on_exhaustion: 'service auto-enters degraded mode (autonomous turn paused, chat on a smaller model); "over-cap traffic refused cleanly" — status code not published'
+  source: README "Operating modes"; ETHICS.md "Operator-side controls"
+- scope: per session, per day
+  kind: spend carve-out
+  limit: 'session_daily_gbp (value not published; the README example sets 0.5); runtime: used_pct.session / available_pct.session_daily'
+  window: UTC day
+  source: README cap JSON example; ETHICS.md "Per-session cap carve-out ... protects the daily heartbeat and PII redaction from a hot session"
+- scope: deployment-wide, per calendar month
+  kind: spend cap
+  limit: 'monthly_gbp (value not published; the README example sets 237); runtime: used_pct.monthly / available_pct.monthly'
+  window: calendar month
+  source: README cap JSON example; live /api/budget used_pct.monthly 8 on 2026-09-20
+observed:
+- {url: 'https://marginalia.polycode.co.uk/api/budget', status: 200, body_fields: [status, locked, chat_model, 'used_pct {daily, monthly, session, turns, synth}', 'available_pct {daily, monthly, synth_daily, session_daily}']}
+- {url: 'https://marginalia.polycode.co.uk/api/status', status: 200, body_fields: ['cap {cost_p: 0, turns: 49}', bedrock_enabled, mode], note: 'cap.turns is a turn count; whether it is a ceiling or a remainder is not documented'}
+- {url: 'https://marginalia.polycode.co.uk/api/graphs', status: 200, headers: 'no RateLimit-*, X-RateLimit-* or Retry-After'}
+- {url: 'https://marginalia.polycode.co.uk/api/a2a', status: 200, headers: 'no rate-limit headers; access-control-allow-origin *'}
+response_headers: []
+status_on_exhaustion: null
+runtime_signal:
+  endpoint: GET /api/budget
+  fields: [status (running | running high | degraded | sleeping), locked, used_pct.*, available_pct.*]
+  guidance: Poll before a batch of turns; treat status degraded or sleeping, or available_pct.daily near 0, as back-off.

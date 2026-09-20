@@ -1,0 +1,25 @@
+generated: '2026-09-19'
+method: generated
+source: >-
+  openapi/polycode-co-uk-marginalia-openapi.json + a2a/polycode-co-uk-agent-card.json (the card's three skills —
+  chat, recall-memory, research-projects)
+note: >-
+  The provider publishes no skill files (no /skill.md, AGENTS.md or SKILL.md on the host or in the repository; the
+  repository's SKILL_BENCHMARK documents are benchmark notes, not agent skills). These three mirror the three skills
+  the agent card declares and are grounded only in operationIds present in the fetched OpenAPI.
+skills:
+- file: polycode-co-uk-chat-with-the-graph.md
+  name: Chat with the marginalia memory graph
+  api: openapi/polycode-co-uk-marginalia-openapi.json
+  operations: [getDefaultGraph, getStatus, getBudget, postChat, getChatResult, postMechanicalCompletion]
+  mirrors_card_skill: chat
+- file: polycode-co-uk-recall-memory.md
+  name: Recall marginalia's memory
+  api: openapi/polycode-co-uk-marginalia-openapi.json
+  operations: [listGraphs, getDefaultGraph, getSessionsSearch, getSessionHistory, getSessionMeta, getTurn, getActivity, getInsights, getDailySummary, getEntities, getVisitor, postFlag]
+  mirrors_card_skill: recall-memory
+- file: polycode-co-uk-research-projects.md
+  name: Follow marginalia's research projects
+  api: openapi/polycode-co-uk-marginalia-openapi.json
+  operations: [getProjects, getProjectDetail, getProjectFile, postChat, getChatResult, postProjectOp]
+  mirrors_card_skill: research-projects

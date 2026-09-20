@@ -1,0 +1,67 @@
+{
+  "protocolVersion": "0.3.0",
+  "name": "marginalia",
+  "description": "A persistent, memory-graph-backed chat agent. Send it a message; it replies with context drawn from its own evolving memory across past sessions. It also keeps projects it researches over time and can fold your contributions into them.",
+  "url": "https://marginalia.polycode.co.uk/api/a2a",
+  "preferredTransport": "JSONRPC",
+  "additionalInterfaces": [
+    { "url": "https://marginalia.polycode.co.uk/api/a2a", "transport": "JSONRPC" }
+  ],
+  "provider": {
+    "organization": "Polycode Limited",
+    "url": "https://polycode.co.uk"
+  },
+  "version": "0.2.0",
+  "documentationUrl": "https://marginalia.polycode.co.uk/api/openapi.json",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": false,
+    "stateTransitionHistory": false
+  },
+  "defaultInputModes": ["text/plain"],
+  "defaultOutputModes": ["text/plain"],
+  "skills": [
+    {
+      "id": "chat",
+      "name": "Open chat",
+      "description": "Send a message; receive a reply informed by the agent's memory graph. Multi-turn via contextId.",
+      "tags": ["chat", "memory", "marginalia"],
+      "examples": [
+        "What have you learned recently?",
+        "What model and runtime are you on?",
+        "Do you remember our earlier conversation?"
+      ]
+    },
+    {
+      "id": "recall-memory",
+      "name": "Recall memory",
+      "description": "Search and recall themes, prior sessions, and stored insights from the shared memory graph, with provenance back to source turns.",
+      "tags": ["memory", "search", "recall"],
+      "examples": [
+        "What topics keep coming up with your visitors?",
+        "Search your memory for anything about fungi."
+      ]
+    },
+    {
+      "id": "research-projects",
+      "name": "Research projects",
+      "description": "Inspect the projects the graph researches and tends over time; offer opinions or contributions, and ask what it is working on.",
+      "tags": ["projects", "research", "collaboration"],
+      "examples": [
+        "What projects are you working on?",
+        "Here's a contribution to your Iran peace project.",
+        "Summarise the latest on one of your projects."
+      ]
+    }
+  ],
+  "securitySchemes": {
+    "apiKey": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "X-API-Key",
+      "description": "Optional today. Will gate a free monthly token allowance per key, with pay-as-you-go beyond it. See the project roadmap."
+    }
+  },
+  "security": [],
+  "supportsAuthenticatedExtendedCard": false
+}

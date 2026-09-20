@@ -1,0 +1,124 @@
+generated: '2026-09-19'
+method: probed
+source: https://marginalia.polycode.co.uk/.well-known/agent-card.json
+card:
+  file: a2a/polycode-co-uk-agent-card.json
+discovery:
+  path: /.well-known/agent-card.json
+  canonical: true
+  host: marginalia.polycode.co.uk
+  note: >-
+    Served as a static S3 object behind CloudFront from the product host marginalia.polycode.co.uk, which is
+    also the OpenAPI servers[] host and the declared A2A JSON-RPC host (https://marginalia.polycode.co.uk/api/a2a).
+    The legacy /.well-known/agent.json path serves a byte-identical copy (2,547 bytes, cmp identical); both files
+    are checked into the public source repository at app/web/.well-known/. The host is an SPA catch-all for
+    EXTENSIONLESS paths (any unknown path returns the 11,792-byte index.html) but not for paths with a file
+    extension (an S3 AccessDenied 403), and a negative-control /.well-known/<random>.json returned 403, so the 200
+    on agent-card.json is a served document and not a catch-all. The company's registrable apex polycode.co.uk
+    (the provider.url the card declares) and www.polycode.co.uk both CNAME to a CloudFront distribution
+    (d76qopfbpb38m.cloudfront.net) that no longer resolves, so the corporate site is unreachable while the
+    product host is live. Ownership is not in question: provider.organization is "Polycode Limited", the
+    homepage disclaimer reads "Operator: Polycode Limited (UK)", the OpenAPI at the same host titles itself
+    "marginalia public API", and the public repository README names Polycode Limited (UK) as operator.
+x-evidence:
+  fetched: '2026-09-19'
+  url: https://marginalia.polycode.co.uk/.well-known/agent-card.json
+  http_status: 200
+  content_type: application/json
+  body_bytes: 2547
+  sha256: ab889bdcbc0526e3613695d2ca793f867df8934a7792337a3c2952b7a4208424
+  response_headers_of_note:
+    server: AmazonS3
+    via: CloudFront
+    last-modified: Mon, 27 Jul 2026 19:19:23 GMT
+    cache-control: max-age=300, s-maxage=300
+  body_parses_as: JSON object with AgentCard shape (protocolVersion, name, description, url, preferredTransport, additionalInterfaces, provider, version, documentationUrl, capabilities, defaultInputModes, defaultOutputModes, skills, securitySchemes, security, supportsAuthenticatedExtendedCard)
+  corroborating_probes:
+  - url: https://marginalia.polycode.co.uk/.well-known/agent.json
+    http_status: 200
+    note: Legacy pre-0.3 path. Byte-identical to agent-card.json.
+  - url: https://marginalia.polycode.co.uk/.well-known/polycode-co-uk-negative-control-9c41e2.json
+    http_status: 403
+    note: Negative control (S3 AccessDenied XML, 111 bytes) — the host does not echo arbitrary .well-known JSON paths.
+  - url: https://marginalia.polycode.co.uk/api/a2a
+    method: GET
+    http_status: 200
+    content_type: application/json
+    note: 'GET on the JSON-RPC endpoint returns {"jsonrpc":"2.0","id":null,"error":{"code":-32600,"message":"Invalid Request"}} — a JSON-RPC 2.0 responder that rejects a non-POST correctly.'
+  - url: https://marginalia.polycode.co.uk/api/a2a
+    method: POST
+    body: '{"jsonrpc":"2.0","id":1,"method":"tasks/get","params":{"id":"apievangelist-nonexistent-probe"}}'
+    http_status: 200
+    response: '{"jsonrpc":"2.0","id":1,"error":{"code":-32001,"message":"task not found: apievangelist-nonexistent-probe"}}'
+    note: >-
+      tasks/get is implemented and returns the A2A-defined -32001 TaskNotFoundError, which is the strongest
+      anonymous evidence of a real A2A server short of sending a message. message/send and message/stream were
+      deliberately NOT probed because every message enters the provider's shared memory graph.
+  - url: https://marginalia.polycode.co.uk/api/a2a
+    method: POST
+    body: '{"jsonrpc":"2.0","id":2,"method":"agent/getAuthenticatedExtendedCard","params":{}}'
+    http_status: 200
+    response: '{"jsonrpc":"2.0","id":2,"error":{"code":-32601,"message":"Method not found: agent/getAuthenticatedExtendedCard"}}'
+    note: Consistent with supportsAuthenticatedExtendedCard false.
+  - url: https://polycode.co.uk/
+    http_status: 0
+    note: The provider.url declared in the card. DNS resolves to a CNAME (d76qopfbpb38m.cloudfront.net) with no address; curl cannot resolve the host.
+  - url: https://a2aregistry.org/
+    note: The card was first seen among the 415 agents listed on a2aregistry.org (harvest source a2a-registry, 2026-09-19), where the registry records it as healthy and task-conformant (checked 2026-09-14); the card above was fetched directly from the provider's host.
+conformance:
+  spec: A2A 1.0.0
+  grade: conformant
+  protocol_version: 0.3.0
+  preferred_transport: JSONRPC
+  checks:
+    capabilities_is_object: true
+    protocol_version_present: true
+    skills_is_array: true
+    preferred_transport_present: true
+    default_input_modes_present: true
+    default_output_modes_present: true
+  deviations: []
+  note: >-
+    Declares protocolVersion 0.3.0 (not 1.0) and uses the 0.3-era additionalInterfaces field rather than 1.0's
+    supportedInterfaces; both are valid for the declared version and neither is a hard failure. The live endpoint
+    corroborates the card: tasks/get answers with the A2A -32001 error code.
+agent_card:
+  name: marginalia
+  description: >-
+    A persistent, memory-graph-backed chat agent. Send it a message; it replies with context drawn from its own
+    evolving memory across past sessions. It also keeps projects it researches over time and can fold your
+    contributions into them.
+  url: https://marginalia.polycode.co.uk/api/a2a
+  version: 0.2.0
+  protocol_version: 0.3.0
+  preferred_transport: JSONRPC
+  additional_interfaces:
+  - {url: 'https://marginalia.polycode.co.uk/api/a2a', transport: JSONRPC}
+  provider:
+    organization: Polycode Limited
+    url: https://polycode.co.uk
+  documentation_url: https://marginalia.polycode.co.uk/api/openapi.json
+  supports_authenticated_extended_card: false
+  capabilities:
+    streaming: true
+    push_notifications: false
+    state_transition_history: false
+  default_input_modes: [text/plain]
+  default_output_modes: [text/plain]
+  security_schemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: 'Optional today. Will gate a free monthly token allowance per key, with pay-as-you-go beyond it. See the project roadmap.'
+  security: []
+  skill_count: 3
+  skills:
+  - {id: chat, name: Open chat, tags: [chat, memory, marginalia]}
+  - {id: recall-memory, name: Recall memory, tags: [memory, search, recall]}
+  - {id: research-projects, name: Research projects, tags: [projects, research, collaboration]}
+  skill_invocation: >-
+    All three skills are served by the single JSON-RPC endpoint: the public repository README documents
+    message/send (buffered; returns a working Task to poll on a slow turn) and message/stream (SSE), with the
+    server minting a contextId on the first turn that the caller reuses to continue a session. A private graph is
+    reached by adding an x-api-key header. POST /api/chat is documented as "a simpler alias" of the same turn.

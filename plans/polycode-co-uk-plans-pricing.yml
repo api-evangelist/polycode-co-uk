@@ -1,0 +1,22 @@
+generated: '2026-09-19'
+method: searched
+source: https://marginalia.polycode.co.uk/.well-known/agent-card.json
+plan_count: 0
+currency: null
+pricing_url: null
+probed:
+- {url: 'https://marginalia.polycode.co.uk/pricing', status: 200, note: SPA shell (soft-404) — no pricing page exists}
+- {url: 'https://marginalia.polycode.co.uk/.well-known/agent-card.json', status: 200, note: 'securitySchemes.apiKey.description: "Optional today. Will gate a free monthly token allowance per key, with pay-as-you-go beyond it. See the project roadmap."'}
+- {url: 'https://gitlab.com/polycode-projects/marginalia/-/blob/main/README.md', status: 200, note: '"a future pro-tier uplift would add Bedrock-hosted Sonnet 4.6 / Opus for higher caps (still billed through marginalia — no visitor BYO keys)"'}
+note: >-
+  No plans are published. The public API, the chat surface and the A2A endpoint are free to use with no key, and
+  logged-in (Tier-1, Google) users can mint API keys bound to private graphs at no stated price. The provider
+  states an INTENT to gate keys behind "a free monthly token allowance per key, with pay-as-you-go beyond it" and to
+  add a paid "pro-tier" for larger models and higher caps; neither has a price, a quota or a start date. The
+  operative limits today are the operator's spend caps (see rate-limits/), not a plan.
+access_tiers:
+- {tier: 0, name: visitor, price: free, includes: [public reads, chat on the shared graph, A2A, mechanical completions], limits: operator daily/session spend caps}
+- {tier: 1, name: logged in, price: free, includes: [private graphs, API keys, web search and the fuller model in chat], limits: same caps}
+announced_not_priced:
+- {name: per-key free monthly token allowance + pay-as-you-go, status: announced in the agent card, price: null}
+- {name: pro tier (Sonnet 4.6 / Opus, higher caps), status: mentioned in README as future, price: null}

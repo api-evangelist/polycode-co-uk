@@ -1,0 +1,59 @@
+generated: '2026-09-19'
+method: derived
+source: openapi/polycode-co-uk-marginalia-openapi.json
+note: >-
+  The spec declares no components.schemas and every response schema is a bare {type: object}, so this graph is
+  derived from path nesting, path/query parameter names, request-body properties and operation summaries — plus
+  field names observed in live anonymous responses (listGraphs, getProjects, getStatus, getBudget). Cardinalities
+  are read from the summaries and README, not from schemas.
+entities:
+- name: Graph
+  id_field: graphId (uuid)
+  kinds: [shared default graph, archived/dormant past graphs, private graphs (key-bound, owner-only)]
+  observed_fields: [id, name, status (default|dormant|archived), last_active_at, created_at, archived_at, is_private, mine, is_user_default, node_count, group]
+  operations: [getDefaultGraph, listGraphs, createPrivateGraph, deletePrivateGraph, renamePrivateGraph, setUserDefault, setMyDefaultGraph, clearUserDefault, getPromptNote, setPromptNote, setRepo, getRepoSummary, postExport]
+- name: Session
+  id_field: sessionUuid (uuid, client-minted or server-minted)
+  operations: [getSessionHistory, getSessionMeta, postSessionIntroduction, getSessionsSearch, getSessionsLog]
+- name: Turn
+  id_field: turnId (uuid)
+  operations: [getTurn, getActivity, postChat, getChatResult]
+- name: Visitor
+  id_field: visitorId (pseudonymous uuid, opt-in)
+  operations: [getVisitor, postVisitorLabel]
+- name: MemoryNode
+  id_field: target (node id) on postFlag
+  operations: [postFlag, getInsights, getDailySummary, getEntities, refreshInsights]
+- name: Project
+  id_field: projectId (uuid)
+  observed_fields: [id, name, status (e.g. exploring), owner_graph, file_count, total_bytes, created_at, last_active_at, can_act]
+  operations: [getProjects, getProjectDetail, getProjectFile, postProjectOp]
+- name: ProjectFile
+  id_field: relpath
+  operations: [getProjectFile]
+- name: ApiKey
+  id_field: hash (plaintext shown once; last-4 suffix, prefix mga_)
+  operations: [postKeys, getKeys, whoamiKey]
+- name: ChatTask
+  id_field: task (query param on getChatResult)
+  states: [working, completed, failed]
+  operations: [postChat, getChatResult]
+- name: RepoBinding
+  id_field: graphId
+  fields: [repo_owner, repo_slug, repo_url, default_branch, intent_path, license, summary_branch, summary_path, agent_config]
+  operations: [setRepo, postGithubHook, postGitlabHook, postHooksPush]
+- name: Deployment
+  operations: [getStatus, getBudget, getUsage, getUsageAll, getDiverts]
+relationships:
+- {from: Graph, to: Session, type: has_many, via: '/api/graph/{graphId}/session/{sessionUuid}'}
+- {from: Session, to: Turn, type: has_many, via: getSessionHistory}
+- {from: Graph, to: Turn, type: has_many, via: '/api/graph/{graphId}/turn/{turnId} and getActivity'}
+- {from: Visitor, to: Session, type: has_many, via: 'visitorId on postChat; getSessionsLog'}
+- {from: Graph, to: MemoryNode, type: has_many, via: insights, daily-summary, entities}
+- {from: MemoryNode, to: Turn, type: derived_from, via: provenance ("with provenance back to source turns", agent card)}
+- {from: Graph, to: Project, type: has_many, via: 'getProjects?graph=; owner_graph field'}
+- {from: Project, to: ProjectFile, type: has_many, via: 'getProjectFile?relpath='}
+- {from: ApiKey, to: Graph, type: has_one, via: '"A key is 1:1 with a private graph" (account.mjs); whoamiKey returns graph_id'}
+- {from: Graph, to: RepoBinding, type: has_one, via: 'setRepo /api/graphs/{graphId}/repo'}
+- {from: Graph, to: Graph, type: succeeds, via: 'monthly retirement: a new default graph inherits top-level summaries from its archived predecessor (GitLab issue #6)'}
+- {from: ChatTask, to: Turn, type: produces, via: getChatResult reply}

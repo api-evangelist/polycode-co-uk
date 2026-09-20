@@ -1,0 +1,47 @@
+generated: '2026-09-19'
+method: searched
+source: https://gitlab.com/polycode-projects/marginalia/-/blob/main/README.md
+sources:
+- {url: 'https://marginalia.polycode.co.uk/api/openapi.json', status: 200, note: 'info.version 0.1.7; servers[] carries a production URL and a templated CI-branch URL https://ci-{slug}.marginalia.polycode.co.uk'}
+- {url: 'https://marginalia.polycode.co.uk/api/status', status: 200, note: 'version {commit 444aa0a7…, branch main, built_at 2026-08-01T10:35:37Z}, mode aws, bedrock_enabled true'}
+- {url: 'https://marginalia.polycode.co.uk/api/budget', status: 200, note: 'status "running", auth_available true, locked true, chat_model eu.anthropic.claude-haiku-4-5-20251001-v1:0'}
+- {url: 'https://gitlab.com/api/v4/projects/82511089/releases', status: 200, note: '0 releases'}
+- {url: 'https://gitlab.com/api/v4/projects/82511089/repository/tags', status: 200, note: '0 tags'}
+- {url: 'https://gitlab.com/polycode-projects/marginalia/-/blob/main/NEXT.md', status: 200, note: 'living handover + open items; last session 2026-07-28'}
+- {url: 'https://marginalia.polycode.co.uk/status', status: 200, note: 'SPA shell; router.mjs lists /status as a "public status page" route that "land[s] on the same page with a banner pending later work" — not implemented'}
+versioning:
+  scheme: none-public
+  current: 0.1.7 (OpenAPI info.version; package.json version); agent card version 0.2.0
+  note: >-
+    The API carries no version segment except the OpenAI-compatible shim at /api/v1/chat/completions. The spec is
+    regenerated from route descriptors on each build (info.description "Generated from route-descriptors.mjs";
+    npm script "openapi"), and the deployed build is self-reported by GET /api/status (commit, branch, built_at).
+    No compatibility or breaking-change policy is published; no releases or tags exist in the repository; the last
+    commit at the time of profiling was 2026-08-01.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  note: No deprecation policy, Sunset or Deprecation header support is documented. Nothing in the spec is marked deprecated.
+deprecated_operations: []
+sla:
+  url: null
+  uptime_target: null
+  note: >-
+    No SLA. The provider describes the service as "a small public chat experiment" with hard daily spend caps and
+    an operator-set operating mode (normal | high | degraded | sleep); in degraded mode the autonomous turn pauses
+    and chat falls back to a smaller model, and in sleep mode Bedrock is switched off ("the graph is taking a
+    moment of quiet"). Callers should read GET /api/budget .status (running | running high | degraded | sleeping).
+status_page: null
+health_endpoints:
+- {url: 'https://marginalia.polycode.co.uk/api/status', operationId: getStatus, note: 'deployment status: caps, default graph, bedrock_enabled, mode, version'}
+- {url: 'https://marginalia.polycode.co.uk/api/budget', operationId: getBudget, note: 'live operating status verb + spend vs caps'}
+graph_lifecycle:
+  note: >-
+    The memory graph itself has a lifecycle the API exposes: the current default graph is retired roughly monthly
+    ("Monthly retirement ceremony (~30 days)", GitLab issue #6) and archived graphs stay addressable via listGraphs
+    (status default | dormant | archived, archived_at). Private graphs are created, renamed, exported (stub) and
+    deleted by their owner (createPrivateGraph, renamePrivateGraph, postExport, deletePrivateGraph).
+changelog:
+  url: null
+  note: No dated changelog is published; the repository README says the delivered history lives in git log (ROADMAP_DELIVERED.md is archived). changelog/ is therefore not written.

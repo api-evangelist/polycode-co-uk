@@ -1,0 +1,60 @@
+generated: '2026-09-19'
+method: searched
+source: https://gitlab.com/polycode-projects/marginalia/-/blob/main/cli/bin/marginalia.mjs
+docs: https://gitlab.com/polycode-projects/marginalia/-/blob/main/README.md
+name: marginalia
+package: '@polycode-projects/marginalia'
+version: 0.1.0
+license: AGPL-3.0-only
+runtime: Node.js >=24 (ESM)
+official: true
+install:
+- method: npx
+  command: npx @polycode-projects/marginalia <cmd>
+  status: >-
+    intended — the README states "The npm packages are not published yet (operator decision - after stability)";
+    registry.npmjs.org returned 404 on 2026-09-19
+- method: checkout
+  command: git clone https://gitlab.com/polycode-projects/marginalia && npm run marginalia -- <cmd>
+  status: works today (the documented interim form)
+default_base_url: https://marginalia.polycode.co.uk
+auth: none by default (public API); --sandbox sends x-sandbox true; report --s3 commands need AWS SSO credentials
+commands:
+- group: chat
+  commands:
+  - {command: 'marginalia chat "<message>"', does: one-shot chat (prints the reply), api: [postChat, getChatResult]}
+  - {command: marginalia, does: interactive chat (REPL)}
+  - {command: 'marginalia turn ["topic"]', does: 'drive one [diagnostic] turn (manual poke)'}
+- group: graphs and status
+  commands:
+  - {command: 'marginalia graphs [--all]', does: list memory graphs, api: [listGraphs]}
+  - {command: marginalia status, does: deployment status + caps, api: [getStatus]}
+  - {command: 'marginalia usage [--graph|--session <uuid>]', does: spend drill-down, api: [getUsage]}
+- group: projects
+  commands:
+  - {command: marginalia projects list, api: [getProjects]}
+  - {command: marginalia projects show <id>, api: [getProjectDetail]}
+  - {command: marginalia projects files <id>, api: [getProjectDetail]}
+  - {command: marginalia projects file <id> <relpath>, api: [getProjectFile]}
+- group: sessions
+  commands:
+  - {command: marginalia sessions search <q>, api: [getSessionsSearch]}
+  - {command: marginalia sessions history <session-uuid>, api: [getSessionHistory]}
+- group: report (local artefacts)
+  commands:
+  - {command: marginalia report conversation <g> <s>, does: render one chat thread + sources}
+  - {command: 'marginalia report day [YYYY-MM-DD]', does: 'a day''s sessions, synth, spend'}
+  - {command: marginalia report memory <g> --s3, does: the memory tree + provenance (AWS creds)}
+  - {command: marginalia report agents --s3, does: inbound A2A agents + trust (AWS creds)}
+global_flags:
+  --graph <uuid>: target graph (default the default graph)
+  --session <uuid>: reuse a session (default a fresh one per run)
+  --visitor <uuid>: send a pseudonymous visitor id (opt-in)
+  --json: machine-readable output
+  --base-url <url>: API base (default https://marginalia.polycode.co.uk)
+  --volatile: chat turn not ingested into shared memory
+  --sandbox: route to the sandbox graph (x-sandbox)
+  --local / --dir / --project / --memtree: Local Marginalia — run against local files instead of the hosted API
+report_flags: [--out <dir>, --format vault|html|md, --env ci|prod, --profile <name>, --s3]
+operator_cli:
+  note: A separate operator dispatcher (npm run admin -- <cmd> / scripts/admin/marginalia) needs AWS SSO credentials and is not a consumer surface — mode, sleep, issue-key, bind-connector, prune-nodes.

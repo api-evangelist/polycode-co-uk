@@ -1,0 +1,115 @@
+generated: '2026-09-19'
+method: derived
+status: candidate
+source: openapi/polycode-co-uk-marginalia-openapi.json
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: searched
+  note: >-
+    No MCP server is reachable or installable today. The public repository README (gitlab.com/polycode-projects/marginalia,
+    "Scripts & CLI") describes three layers — "a consumer CLI (public API, no credentials), an MCP server (key-authed,
+    for coding agents), and an operator CLI (AWS SSO)" — and states "The npm packages are not published yet (operator
+    decision: after stability)". The 784-path repository tree carries no MCP server package (the only mcp files are a
+    .mcp.json CLIENT config pointing at https://a2aregistry.org/mcp/ and an evaluation report), the README also records
+    that an earlier "stdio MCP server" for Local Marginalia "was removed", and npm returns 404 for
+    @polycode-projects/marginalia. The agent-facing surface the provider actually ships is A2A (a2a/) plus the public
+    REST API; the tool list below is a CANDIDATE derived from that OpenAPI so a future crosswalk has something to bind to.
+search_result:
+  official_hosted_server: none
+  probes:
+  - url: https://marginalia.polycode.co.uk/api/mcp
+    method: POST tools/list
+    status: 404
+    note: '{"error":"not found","path":"/api/mcp","method":"POST"} — the API gateway''s real JSON 404.'
+  - url: https://marginalia.polycode.co.uk/mcp
+    method: GET
+    status: 200
+    note: SPA catch-all shell (11,792-byte index.html), not an MCP endpoint.
+  - url: https://marginalia.polycode.co.uk/.well-known/mcp.json
+    method: GET
+    status: 403
+  - url: https://registry.npmjs.org/@polycode-projects%2Fmarginalia
+    status: 404
+    note: The CLI/MCP package name the README uses is not published.
+  third_party: []
+server:
+  name: marginalia
+  transport: http
+  url: null
+tools:
+- name: chat
+  description: Async one-turn chat with the memory graph; returns a task id to poll. Reuse sessionUuid for multi-turn context; set volatile to keep the turn out of shared memory.
+  source_operation: openapi/polycode-co-uk-marginalia-openapi.json#postChat
+  auth: none (X-API-Key routes to a private graph)
+- name: get_chat_result
+  description: Poll an async chat task (working | completed with reply | failed).
+  source_operation: openapi/polycode-co-uk-marginalia-openapi.json#getChatResult
+  auth: none
+- name: mechanical_completion
+  description: OpenAI-shaped, token-free completion answered mechanically (grammar -> SPARQL -> template) with a provenance receipt.
+  source_operation: openapi/polycode-co-uk-marginalia-openapi.json#postMechanicalCompletion
+  auth: none (X-API-Key selects a graph)
+- name: list_graphs
+  description: List memory graphs (past + current); all=1 bypasses the margin cap.
+  source_operation: openapi/polycode-co-uk-marginalia-openapi.json#listGraphs
+  auth: none
+- name: get_default_graph
+  description: Resolve the current default graph id.
+  source_operation: openapi/polycode-co-uk-marginalia-openapi.json#getDefaultGraph
+  auth: none
+- name: search_sessions
+  description: Full-text search across session introductions.
+  source_operation: openapi/polycode-co-uk-marginalia-openapi.json#getSessionsSearch
+  auth: none
+- name: get_session_history
+  description: Turn history for a session.
+  source_operation: openapi/polycode-co-uk-marginalia-openapi.json#getSessionHistory
+  auth: none
+- name: get_turn
+  description: A single turn by id.
+  source_operation: openapi/polycode-co-uk-marginalia-openapi.json#getTurn
+  auth: none
+- name: get_insights
+  description: Latest hourly insights for a graph.
+  source_operation: openapi/polycode-co-uk-marginalia-openapi.json#getInsights
+  auth: none
+- name: get_daily_summary
+  description: Latest daily typed-edge prose summary (markdown) for a graph.
+  source_operation: openapi/polycode-co-uk-marginalia-openapi.json#getDailySummary
+  auth: none
+- name: get_entities
+  description: Extracted OWL types view — domain classes, object properties, individuals.
+  source_operation: openapi/polycode-co-uk-marginalia-openapi.json#getEntities
+  auth: none
+- name: list_projects
+  description: List a graph's research projects.
+  source_operation: openapi/polycode-co-uk-marginalia-openapi.json#getProjects
+  auth: none
+- name: get_project
+  description: Project detail — file map, log, suggestions.
+  source_operation: openapi/polycode-co-uk-marginalia-openapi.json#getProjectDetail
+  auth: none
+- name: read_project_file
+  description: Read a project file by relpath.
+  source_operation: openapi/polycode-co-uk-marginalia-openapi.json#getProjectFile
+  auth: none
+- name: get_status
+  description: Deployment status — caps, default graph, bedrock_enabled, mode, version.
+  source_operation: openapi/polycode-co-uk-marginalia-openapi.json#getStatus
+  auth: none
+- name: get_budget
+  description: Today + month-to-date spend vs caps.
+  source_operation: openapi/polycode-co-uk-marginalia-openapi.json#getBudget
+  auth: none
+- name: flag_memory
+  description: Flag a memory node for operator review.
+  source_operation: openapi/polycode-co-uk-marginalia-openapi.json#postFlag
+  auth: none
+- name: whoami_key
+  description: Which private graph does this X-API-Key resolve to.
+  source_operation: openapi/polycode-co-uk-marginalia-openapi.json#whoamiKey
+  auth: X-API-Key

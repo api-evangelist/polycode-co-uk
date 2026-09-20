@@ -1,0 +1,32 @@
+generated: '2026-09-19'
+method: searched
+source: https://gitlab.com/polycode-projects/marginalia/-/blob/main/cli/bin/marginalia.mjs
+sources:
+- {url: 'https://gitlab.com/polycode-projects/marginalia/-/blob/main/cli/bin/marginalia.mjs', status: 200, quote: '--sandbox          route to the sandbox graph (x-sandbox)'}
+- {url: 'https://gitlab.com/polycode-projects/marginalia/-/blob/main/cli/src/client.mjs', status: 200, quote: 'if (flags.sandbox) headers["x-sandbox"] = "true";'}
+- {url: 'https://marginalia.polycode.co.uk/api/openapi.json', status: 200, quote: 'POST /api/test/seed (postTestSeed) — Prime behaviour-test fixtures into the sandbox graph (sandbox-only).'}
+- {url: 'https://marginalia.polycode.co.uk/api/openapi.json', status: 200, quote: 'servers[1]: https://ci-{slug}.marginalia.polycode.co.uk (CI branch)'}
+note: >-
+  There is no separate sandbox host or test credential. The published mechanisms are (1) a sandbox GRAPH on the
+  production host, selected per request with the x-sandbox: true header (documented in the first-party CLI as
+  --sandbox "route to the sandbox graph"), (2) the volatile flag, which runs a turn without ingesting it into
+  shared memory, and (3) per-branch CI deployments at ci-{slug}.marginalia.polycode.co.uk declared in the spec's
+  servers[] (a CI slug is not published; the default variable value is main and no such host was probed). No test
+  values, fixtures or magic identifiers are published; postTestSeed exists but is "sandbox-only" and its body is
+  undocumented.
+modes:
+- name: sandbox graph
+  selector: 'request header x-sandbox: true'
+  host: https://marginalia.polycode.co.uk
+  effect: routes the turn to the sandbox graph instead of the shared default graph
+  documented_in: CLI --sandbox flag
+- name: volatile turn
+  selector: 'postChat body volatile: true (CLI --volatile)'
+  effect: chat turn not ingested into shared memory
+- name: CI branch deployment
+  selector: 'servers[1] https://ci-{slug}.marginalia.polycode.co.uk'
+  effect: a full per-branch deployment; slugs are not published
+fixtures:
+  operation: postTestSeed
+  note: 'Summary reads "Prime behaviour-test fixtures into the sandbox graph (sandbox-only)"; body not documented; not invoked.'
+test_credentials: none published

@@ -1,0 +1,24 @@
+generated: '2026-09-19'
+method: searched
+source: https://gitlab.com/polycode-projects/marginalia/-/blob/main/cli/package.json
+note: >-
+  No published client library. The only first-party package is the consumer CLI, which the provider documents in
+  npx form but has not published ("The npm packages are not published yet (operator decision: after stability)",
+  README). registry.npmjs.org/@polycode-projects%2Fmarginalia returned 404 on 2026-09-19; the unscoped npm name
+  "marginalia" belongs to an unrelated project (jxe/marginalia) and is not this provider's. No SDKs pointer is
+  emitted. Registries searched: npm, PyPI, RubyGems, crates.io, Packagist, Maven Central, NuGet, pkg.go.dev —
+  nothing under polycode / marginalia belongs to this provider.
+packages:
+- language: javascript
+  kind: cli
+  registry: npm
+  name: '@polycode-projects/marginalia'
+  url: https://gitlab.com/polycode-projects/marginalia/-/tree/main/cli
+  install: npx @polycode-projects/marginalia <cmd>   # intended; run from a checkout with npm run marginalia -- <cmd> until published
+  official: true
+  version: null
+  published: null
+  repo_version: 0.1.0
+  registry_status: 404 (unpublished)
+  license: AGPL-3.0-only
+  note: Version 0.1.0 is the repository's cli/package.json; the registry has never carried a release, so version and published are null.
