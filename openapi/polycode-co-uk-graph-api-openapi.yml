@@ -1,0 +1,276 @@
+openapi: 3.2.0
+info:
+  title: marginalia public Graph API
+  version: 0.1.7
+  description: Public read + chat API for marginalia (https://marginalia.polycode.co.uk). No auth today; the API is public. Generated from route-descriptors.mjs.
+  license:
+    name: AGPL-3.0-only
+servers:
+- url: https://marginalia.polycode.co.uk
+  description: production
+- url: https://ci-{slug}.marginalia.polycode.co.uk
+  description: CI branch
+  variables:
+    slug:
+      default: main
+tags:
+- name: Graph
+paths:
+  /api/graph/{graphId}/activity:
+    get:
+      operationId: getActivity
+      summary: Recent synth turns for a graph
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      parameters:
+      - name: graphId
+        in: path
+        required: true
+        schema:
+          type: string
+      tags:
+      - Graph
+  /api/graph/{graphId}/session/{sessionUuid}/history:
+    get:
+      operationId: getSessionHistory
+      summary: Turn history for a session
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      parameters:
+      - name: graphId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: sessionUuid
+        in: path
+        required: true
+        schema:
+          type: string
+      tags:
+      - Graph
+  /api/graph/{graphId}/session/{sessionUuid}/meta:
+    get:
+      operationId: getSessionMeta
+      summary: Session meta (introduction, searchability)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      parameters:
+      - name: graphId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: sessionUuid
+        in: path
+        required: true
+        schema:
+          type: string
+      tags:
+      - Graph
+  /api/graph/{graphId}/insights:
+    get:
+      operationId: getInsights
+      summary: Latest hourly insights for a graph
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      parameters:
+      - name: graphId
+        in: path
+        required: true
+        schema:
+          type: string
+      tags:
+      - Graph
+  /api/graph/{graphId}/daily-summary:
+    get:
+      operationId: getDailySummary
+      summary: Latest daily typed-edge prose summary (markdown) for a graph
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      parameters:
+      - name: graphId
+        in: path
+        required: true
+        schema:
+          type: string
+      tags:
+      - Graph
+  /api/graph/{graphId}/entities:
+    get:
+      operationId: getEntities
+      summary: 'Extracted OWL types view: domain classes, object properties, and individuals'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      parameters:
+      - name: graphId
+        in: path
+        required: true
+        schema:
+          type: string
+      tags:
+      - Graph
+  /api/graph/{graphId}/insights/refresh:
+    post:
+      operationId: refreshInsights
+      summary: Regenerate a graph's insights now; returns the fresh snapshot
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+      parameters:
+      - name: graphId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      tags:
+      - Graph
+  /api/graph/{graphId}/turn/{turnId}:
+    get:
+      operationId: getTurn
+      summary: A single turn by id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      parameters:
+      - name: graphId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: turnId
+        in: path
+        required: true
+        schema:
+          type: string
+      tags:
+      - Graph
+  /api/graph/{graphId}/session/{sessionUuid}/introduction:
+    post:
+      operationId: postSessionIntroduction
+      summary: Set a visitor's session introduction
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+      parameters:
+      - name: graphId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: sessionUuid
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                introduction:
+                  type: string
+                searchable:
+                  type: boolean
+      tags:
+      - Graph
+  /api/graph/{graphId}/export:
+    post:
+      operationId: postExport
+      summary: Export a graph (stub)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+      parameters:
+      - name: graphId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      tags:
+      - Graph
+  /api/graph/{graphId}/summary:
+    get:
+      operationId: getRepoSummary
+      summary: (Owner/admin/X-API-Key) Build the compact screened showcase seed (summary.json…
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      parameters:
+      - name: graphId
+        in: path
+        required: true
+        schema:
+          type: string
+      tags:
+      - Graph

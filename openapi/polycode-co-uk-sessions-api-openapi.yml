@@ -1,0 +1,66 @@
+openapi: 3.2.0
+info:
+  title: marginalia public Sessions API
+  version: 0.1.7
+  description: Public read + chat API for marginalia (https://marginalia.polycode.co.uk). No auth today; the API is public. Generated from route-descriptors.mjs.
+  license:
+    name: AGPL-3.0-only
+servers:
+- url: https://marginalia.polycode.co.uk
+  description: production
+- url: https://ci-{slug}.marginalia.polycode.co.uk
+  description: CI branch
+  variables:
+    slug:
+      default: main
+tags:
+- name: Sessions
+paths:
+  /api/sessions:
+    get:
+      operationId: getSessionsSearch
+      summary: Full-text search across session introductions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: string
+      tags:
+      - Sessions
+  /api/sessions/log:
+    get:
+      operationId: getSessionsLog
+      summary: 'Combined visitor + socials message log: per-session channel, shortened ids…'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      parameters:
+      - name: graph
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: string
+      tags:
+      - Sessions

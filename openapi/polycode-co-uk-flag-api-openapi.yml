@@ -1,0 +1,46 @@
+openapi: 3.2.0
+info:
+  title: marginalia public Flag API
+  version: 0.1.7
+  description: Public read + chat API for marginalia (https://marginalia.polycode.co.uk). No auth today; the API is public. Generated from route-descriptors.mjs.
+  license:
+    name: AGPL-3.0-only
+servers:
+- url: https://marginalia.polycode.co.uk
+  description: production
+- url: https://ci-{slug}.marginalia.polycode.co.uk
+  description: CI branch
+  variables:
+    slug:
+      default: main
+tags:
+- name: Flag
+paths:
+  /api/flag:
+    post:
+      operationId: postFlag
+      summary: Flag a memory node for operator review
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                target:
+                  type: string
+                reason:
+                  type: string
+                note:
+                  type: string
+      tags:
+      - Flag

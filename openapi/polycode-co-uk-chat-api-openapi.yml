@@ -1,0 +1,95 @@
+openapi: 3.2.0
+info:
+  title: marginalia public Chat API
+  version: 0.1.7
+  description: Public read + chat API for marginalia (https://marginalia.polycode.co.uk). No auth today; the API is public. Generated from route-descriptors.mjs.
+  license:
+    name: AGPL-3.0-only
+servers:
+- url: https://marginalia.polycode.co.uk
+  description: production
+- url: https://ci-{slug}.marginalia.polycode.co.uk
+  description: CI branch
+  variables:
+    slug:
+      default: main
+tags:
+- name: Chat
+paths:
+  /api/chat:
+    post:
+      operationId: postChat
+      summary: 'Async one-turn chat: returns 202 + a task id; poll /api/chat/result.'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - userMessage
+              properties:
+                graphId:
+                  type: string
+                  description: Target graph id; omit for the default graph.
+                sessionUuid:
+                  type: string
+                userMessage:
+                  type: string
+                volatile:
+                  type: boolean
+                  default: false
+                visitorId:
+                  type: string
+                  description: Optional pseudonymous visitor id.
+      tags:
+      - Chat
+  /api/v1/chat/completions:
+    post:
+      operationId: postMechanicalCompletion
+      summary: 'OpenAI-shaped MECHANICAL completion shim: { messages } → grammar Formulate →…'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      tags:
+      - Chat
+  /api/chat/result:
+    get:
+      operationId: getChatResult
+      summary: 'Poll an async chat task: working | completed (with reply) | failed'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      parameters:
+      - name: task
+        in: query
+        required: false
+        schema:
+          type: string
+      tags:
+      - Chat

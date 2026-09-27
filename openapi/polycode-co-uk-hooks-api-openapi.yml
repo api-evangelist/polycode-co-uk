@@ -1,0 +1,93 @@
+openapi: 3.2.0
+info:
+  title: marginalia public Hooks API
+  version: 0.1.7
+  description: Public read + chat API for marginalia (https://marginalia.polycode.co.uk). No auth today; the API is public. Generated from route-descriptors.mjs.
+  license:
+    name: AGPL-3.0-only
+servers:
+- url: https://marginalia.polycode.co.uk
+  description: production
+- url: https://ci-{slug}.marginalia.polycode.co.uk
+  description: CI branch
+  variables:
+    slug:
+      default: main
+tags:
+- name: Hooks
+paths:
+  /api/hooks/gitlab/{graphId}:
+    post:
+      operationId: postGitlabHook
+      summary: (Connector secret) GitLab webhook receiver for a bound supervisor graph…
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+      parameters:
+      - name: graphId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      tags:
+      - Hooks
+  /api/hooks/github/{graphId}:
+    post:
+      operationId: postGithubHook
+      summary: (GitHub HMAC) GitHub webhook receiver for a bound graph — X-Hub-Signature-256…
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+      parameters:
+      - name: graphId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      tags:
+      - Hooks
+  /api/hooks/push:
+    post:
+      operationId: postHooksPush
+      summary: '(X-API-Key) Generic collector: batched { messages: [{ label, body…'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      tags:
+      - Hooks

@@ -1,0 +1,81 @@
+openapi: 3.2.0
+info:
+  title: marginalia public Admin API
+  version: 0.1.7
+  description: Public read + chat API for marginalia (https://marginalia.polycode.co.uk). No auth today; the API is public. Generated from route-descriptors.mjs.
+  license:
+    name: AGPL-3.0-only
+servers:
+- url: https://marginalia.polycode.co.uk
+  description: production
+- url: https://ci-{slug}.marginalia.polycode.co.uk
+  description: CI branch
+  variables:
+    slug:
+      default: main
+tags:
+- name: Admin
+paths:
+  /api/admin/work-item:
+    post:
+      operationId: postWorkItem
+      summary: '(Admin) Create or comment on a GitLab work item: { action: "create", title…'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      tags:
+      - Admin
+  /api/admin/turn:
+    post:
+      operationId: postAdminTurn
+      summary: '(Admin) Trigger an autonomous turn now: { graphId?'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      tags:
+      - Admin
+  /api/admin/delivery:
+    post:
+      operationId: postDelivery
+      summary: '(Admin) GitLab delivery-loop action: { action: assign | mr_review | mr_comment…'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      tags:
+      - Admin

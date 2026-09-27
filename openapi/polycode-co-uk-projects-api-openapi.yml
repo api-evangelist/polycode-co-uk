@@ -1,0 +1,80 @@
+openapi: 3.2.0
+info:
+  title: marginalia public Projects API
+  version: 0.1.7
+  description: Public read + chat API for marginalia (https://marginalia.polycode.co.uk). No auth today; the API is public. Generated from route-descriptors.mjs.
+  license:
+    name: AGPL-3.0-only
+servers:
+- url: https://marginalia.polycode.co.uk
+  description: production
+- url: https://ci-{slug}.marginalia.polycode.co.uk
+  description: CI branch
+  variables:
+    slug:
+      default: main
+tags:
+- name: Projects
+paths:
+  /api/projects:
+    get:
+      operationId: getProjects
+      summary: 'List a graph''s projects (default: the current graph)'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      parameters:
+      - name: graph
+        in: query
+        required: false
+        schema:
+          type: string
+      tags:
+      - Projects
+  /api/projects/{projectId}:
+    get:
+      operationId: getProjectDetail
+      summary: 'Project detail: file map, log, suggestions'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      tags:
+      - Projects
+  /api/projects/{projectId}/file:
+    get:
+      operationId: getProjectFile
+      summary: Read a project file by relpath
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: relpath
+        in: query
+        required: false
+        schema:
+          type: string
+      tags:
+      - Projects

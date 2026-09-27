@@ -1,0 +1,69 @@
+openapi: 3.2.0
+info:
+  title: marginalia public Visitor API
+  version: 0.1.7
+  description: Public read + chat API for marginalia (https://marginalia.polycode.co.uk). No auth today; the API is public. Generated from route-descriptors.mjs.
+  license:
+    name: AGPL-3.0-only
+servers:
+- url: https://marginalia.polycode.co.uk
+  description: production
+- url: https://ci-{slug}.marginalia.polycode.co.uk
+  description: CI branch
+  variables:
+    slug:
+      default: main
+tags:
+- name: Visitor
+paths:
+  /api/visitor/{visitorId}:
+    get:
+      operationId: getVisitor
+      summary: Pseudonymous visitor meta (label, creation time)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      parameters:
+      - name: visitorId
+        in: path
+        required: true
+        schema:
+          type: string
+      tags:
+      - Visitor
+  /api/visitor/{visitorId}/label:
+    post:
+      operationId: postVisitorLabel
+      summary: Set a visitor's screened, unverified label
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+      parameters:
+      - name: visitorId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - label
+              properties:
+                label:
+                  type: string
+      tags:
+      - Visitor

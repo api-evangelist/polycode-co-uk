@@ -1,0 +1,244 @@
+openapi: 3.2.0
+info:
+  title: marginalia public Graphs API
+  version: 0.1.7
+  description: Public read + chat API for marginalia (https://marginalia.polycode.co.uk). No auth today; the API is public. Generated from route-descriptors.mjs.
+  license:
+    name: AGPL-3.0-only
+servers:
+- url: https://marginalia.polycode.co.uk
+  description: production
+- url: https://ci-{slug}.marginalia.polycode.co.uk
+  description: CI branch
+  variables:
+    slug:
+      default: main
+tags:
+- name: Graphs
+paths:
+  /api/graphs/default:
+    get:
+      operationId: getDefaultGraph
+      summary: Resolve the current default graph id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+      - Graphs
+  /api/graphs:
+    get:
+      operationId: listGraphs
+      summary: List memory graphs (past + current). `?all=1` bypasses the margin cap
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      parameters:
+      - name: all
+        in: query
+        required: false
+        schema:
+          type: string
+      tags:
+      - Graphs
+    post:
+      operationId: createPrivateGraph
+      summary: (Tier-1) Create a private graph (archived-from-birth, owner-only, cap 16).
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      tags:
+      - Graphs
+  /api/graphs/{graphId}/repo:
+    post:
+      operationId: setRepo
+      summary: (Owner of a private graph; admin for a public graph) Bind the graph to a source…
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+      parameters:
+      - name: graphId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      tags:
+      - Graphs
+  /api/graphs/default/clear:
+    post:
+      operationId: clearUserDefault
+      summary: (Tier-1) Clear the caller's per-user default graph (revert to the shared graph)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      tags:
+      - Graphs
+  /api/graphs/{graphId}/delete:
+    post:
+      operationId: deletePrivateGraph
+      summary: (Owner) Delete a private graph + its tree, keys, and default pointer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+      parameters:
+      - name: graphId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      tags:
+      - Graphs
+  /api/graphs/{graphId}/label:
+    post:
+      operationId: renamePrivateGraph
+      summary: (Owner of a private graph; admin for any graph) Rename a graph (single-token…
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+      parameters:
+      - name: graphId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      tags:
+      - Graphs
+  /api/graphs/{graphId}/default:
+    post:
+      operationId: setUserDefault
+      summary: (Owner) Set this private graph as the caller's login default
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+      parameters:
+      - name: graphId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      tags:
+      - Graphs
+  /api/graphs/{graphId}/prompt-note:
+    get:
+      operationId: getPromptNote
+      summary: (Owner of a private graph; admin for a public graph) Read the graph's free-text…
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      parameters:
+      - name: graphId
+        in: path
+        required: true
+        schema:
+          type: string
+      tags:
+      - Graphs
+    post:
+      operationId: setPromptNote
+      summary: (Owner of a private graph; admin for a public graph) Set { note } — free text…
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+      parameters:
+      - name: graphId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      tags:
+      - Graphs

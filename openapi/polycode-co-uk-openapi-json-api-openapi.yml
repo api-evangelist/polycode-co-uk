@@ -1,0 +1,31 @@
+openapi: 3.2.0
+info:
+  title: marginalia public Openapi.json API
+  version: 0.1.7
+  description: Public read + chat API for marginalia (https://marginalia.polycode.co.uk). No auth today; the API is public. Generated from route-descriptors.mjs.
+  license:
+    name: AGPL-3.0-only
+servers:
+- url: https://marginalia.polycode.co.uk
+  description: production
+- url: https://ci-{slug}.marginalia.polycode.co.uk
+  description: CI branch
+  variables:
+    slug:
+      default: main
+tags:
+- name: Openapi.json
+paths:
+  /api/openapi.json:
+    get:
+      operationId: getOpenapi
+      summary: This OpenAPI document
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+      - Openapi.json

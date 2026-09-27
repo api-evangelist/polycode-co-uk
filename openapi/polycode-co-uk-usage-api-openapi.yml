@@ -1,0 +1,66 @@
+openapi: 3.2.0
+info:
+  title: marginalia public Usage API
+  version: 0.1.7
+  description: Public read + chat API for marginalia (https://marginalia.polycode.co.uk). No auth today; the API is public. Generated from route-descriptors.mjs.
+  license:
+    name: AGPL-3.0-only
+servers:
+- url: https://marginalia.polycode.co.uk
+  description: production
+- url: https://ci-{slug}.marginalia.polycode.co.uk
+  description: CI branch
+  variables:
+    slug:
+      default: main
+tags:
+- name: Usage
+paths:
+  /api/usage:
+    get:
+      operationId: getUsage
+      summary: Bedrock usage drill-down for a scope
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      parameters:
+      - name: scope
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: scopeId
+        in: query
+        required: false
+        schema:
+          type: string
+      tags:
+      - Usage
+  /api/usage/all:
+    get:
+      operationId: getUsageAll
+      summary: Every LLM call or web search in a calendar month
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      parameters:
+      - name: kind
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: month
+        in: query
+        required: false
+        schema:
+          type: string
+      tags:
+      - Usage

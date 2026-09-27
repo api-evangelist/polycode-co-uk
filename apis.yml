@@ -1,5 +1,5 @@
 aid: polycode-co-uk
-name: Polycode Limited
+name: Polycode
 description: 'Polycode Limited is a UK information-technology consultancy (Companies House 10172940, Leeds, incorporated
   2016) that operates marginalia, a small public chat experiment built on a shared, provenance-tracked memory graph:
   a language model synthesises conversations into an OWL-typed graph and questions are answered by narrowing that
@@ -27,7 +27,7 @@ tags:
 - Knowledge Graph
 - Research
 - Artificial Intelligence
-- Open-Source
+- Open Source
 - Consulting
 - United Kingdom
 tags_raw:
@@ -41,40 +41,14 @@ tags_raw:
 - Open Source
 - Consulting
 - United Kingdom
+- Open-Source
 apis:
-- aid: polycode-co-uk:marginalia-public-api
-  name: marginalia public API
-  description: 'Public read + chat REST API for marginalia, the memory-graph chat agent operated by Polycode Limited.
-    50 operations under /api: async one-turn chat with task polling, an OpenAI-shaped mechanical completion shim,
-    memory-graph listing, session search and history, insights, projects, usage and budget, and key-authed private-graph
-    provisioning. OpenAPI 3.0.3 served at https://marginalia.polycode.co.uk/api/openapi.json.'
-  humanURL: https://marginalia.polycode.co.uk/developers
-  baseURL: https://marginalia.polycode.co.uk/api
-  tags:
-  - Chat
-  - Memory
-  - Agents
-  - Knowledge Graph
-  - Research
-  properties:
-  - type: OpenAPI
-    url: openapi/polycode-co-uk-marginalia-openapi.json
-  - type: OpenAPI
-    name: marginalia public API OpenAPI (provider-hosted)
-    url: https://marginalia.polycode.co.uk/api/openapi.json
-  - type: Documentation
-    url: https://marginalia.polycode.co.uk/developers
-  - type: APIReference
-    url: https://marginalia.polycode.co.uk/api/openapi.json
-  - type: Overlay
-    url: overlays/polycode-co-uk-marginalia-overlay.yaml
-  - type: Sandbox
-    url: sandbox/polycode-co-uk-sandbox.yml
 - aid: polycode-co-uk:marginalia-a2a-agent
   name: marginalia A2A Agent
-  description: 'Agent2Agent (A2A) surface for marginalia: an agent card served from https://marginalia.polycode.co.uk/.well-known/agent-card.json
-    (protocolVersion 0.3.0, JSONRPC, version 0.2.0) advertising three skills (open chat, recall memory, research
-    projects) and a live JSON-RPC endpoint at https://marginalia.polycode.co.uk/api/a2a.'
+  description: >-
+    Agent2Agent (A2A) surface for marginalia: an agent card served from https://marginalia.polycode.co.uk/.well-known/agent-card.json
+    (protocolVersion 0.3.0, JSONRPC, version 0.2.0) advertising three skills (open chat, recall memory,
+    research projects) and a live JSON-RPC endpoint at https://marginalia.polycode.co.uk/api/a2a.
   humanURL: https://marginalia.polycode.co.uk/
   baseURL: https://marginalia.polycode.co.uk/api/a2a
   tags:
@@ -90,13 +64,304 @@ apis:
     url: https://marginalia.polycode.co.uk/.well-known/agent-card.json
   - type: Documentation
     name: 'README — Talk to it: the A2A API'
-    url: https://gitlab.com/polycode-projects/marginalia/-/blob/main/README.md#talk-to-it--the-a2a-api
+    url: >-
+      https://gitlab.com/polycode-projects/marginalia/-/blob/main/README.md#talk-to-it--the-a2a-api
+- aid: polycode-co-uk:polycode-co-uk-admin-api
+  name: Polycode Admin API
+  description: The Admin API from Polycode — 3 operation(s) for admin.
+  humanURL: https://marginalia.polycode.co.uk/developers
+  baseURL: https://marginalia.polycode.co.uk/api
+  tags:
+  - Admin
+  properties:
+  - type: OpenAPI
+    url: openapi/polycode-co-uk-admin-api-openapi.yml
+  - type: Documentation
+    url: https://marginalia.polycode.co.uk/developers
+  - type: APIReference
+    url: https://marginalia.polycode.co.uk/api/openapi.json
+  - type: Sandbox
+    url: sandbox/polycode-co-uk-sandbox.yml
+- aid: polycode-co-uk:polycode-co-uk-budget-api
+  name: Polycode Budget API
+  description: The Budget API from Polycode — 1 operation(s) for budget.
+  humanURL: https://marginalia.polycode.co.uk/developers
+  baseURL: https://marginalia.polycode.co.uk/api
+  tags:
+  - Budget
+  properties:
+  - type: OpenAPI
+    url: openapi/polycode-co-uk-budget-api-openapi.yml
+  - type: Documentation
+    url: https://marginalia.polycode.co.uk/developers
+  - type: APIReference
+    url: https://marginalia.polycode.co.uk/api/openapi.json
+  - type: Sandbox
+    url: sandbox/polycode-co-uk-sandbox.yml
+- aid: polycode-co-uk:polycode-co-uk-chat-api
+  name: Polycode Chat API
+  description: The Chat API from Polycode — 3 operation(s) for chat.
+  humanURL: https://marginalia.polycode.co.uk/developers
+  baseURL: https://marginalia.polycode.co.uk/api
+  tags:
+  - Chat
+  properties:
+  - type: OpenAPI
+    url: openapi/polycode-co-uk-chat-api-openapi.yml
+  - type: Documentation
+    url: https://marginalia.polycode.co.uk/developers
+  - type: APIReference
+    url: https://marginalia.polycode.co.uk/api/openapi.json
+  - type: Sandbox
+    url: sandbox/polycode-co-uk-sandbox.yml
+- aid: polycode-co-uk:polycode-co-uk-diverts-api
+  name: Polycode Diverts API
+  description: The Diverts API from Polycode — 1 operation(s) for diverts.
+  humanURL: https://marginalia.polycode.co.uk/developers
+  baseURL: https://marginalia.polycode.co.uk/api
+  tags:
+  - Diverts
+  properties:
+  - type: OpenAPI
+    url: openapi/polycode-co-uk-diverts-api-openapi.yml
+  - type: Documentation
+    url: https://marginalia.polycode.co.uk/developers
+  - type: APIReference
+    url: https://marginalia.polycode.co.uk/api/openapi.json
+  - type: Sandbox
+    url: sandbox/polycode-co-uk-sandbox.yml
+- aid: polycode-co-uk:polycode-co-uk-flag-api
+  name: Polycode Flag API
+  description: The Flag API from Polycode — 1 operation(s) for flag.
+  humanURL: https://marginalia.polycode.co.uk/developers
+  baseURL: https://marginalia.polycode.co.uk/api
+  tags:
+  - Flag
+  properties:
+  - type: OpenAPI
+    url: openapi/polycode-co-uk-flag-api-openapi.yml
+  - type: Documentation
+    url: https://marginalia.polycode.co.uk/developers
+  - type: APIReference
+    url: https://marginalia.polycode.co.uk/api/openapi.json
+  - type: Sandbox
+    url: sandbox/polycode-co-uk-sandbox.yml
+- aid: polycode-co-uk:polycode-co-uk-graph-api
+  name: Polycode Graph API
+  description: The Graph API from Polycode — 11 operation(s) for graph.
+  humanURL: https://marginalia.polycode.co.uk/developers
+  baseURL: https://marginalia.polycode.co.uk/api
+  tags:
+  - Graph
+  properties:
+  - type: OpenAPI
+    url: openapi/polycode-co-uk-graph-api-openapi.yml
+  - type: Documentation
+    url: https://marginalia.polycode.co.uk/developers
+  - type: APIReference
+    url: https://marginalia.polycode.co.uk/api/openapi.json
+  - type: Sandbox
+    url: sandbox/polycode-co-uk-sandbox.yml
+- aid: polycode-co-uk:polycode-co-uk-graphs-api
+  name: Polycode Graphs API
+  description: The Graphs API from Polycode — 8 operation(s) for graphs.
+  humanURL: https://marginalia.polycode.co.uk/developers
+  baseURL: https://marginalia.polycode.co.uk/api
+  tags:
+  - Graphs
+  properties:
+  - type: OpenAPI
+    url: openapi/polycode-co-uk-graphs-api-openapi.yml
+  - type: Documentation
+    url: https://marginalia.polycode.co.uk/developers
+  - type: APIReference
+    url: https://marginalia.polycode.co.uk/api/openapi.json
+  - type: Sandbox
+    url: sandbox/polycode-co-uk-sandbox.yml
+- aid: polycode-co-uk:polycode-co-uk-hooks-api
+  name: Polycode Hooks API
+  description: The Hooks API from Polycode — 3 operation(s) for hooks.
+  humanURL: https://marginalia.polycode.co.uk/developers
+  baseURL: https://marginalia.polycode.co.uk/api
+  tags:
+  - Hooks
+  properties:
+  - type: OpenAPI
+    url: openapi/polycode-co-uk-hooks-api-openapi.yml
+  - type: Documentation
+    url: https://marginalia.polycode.co.uk/developers
+  - type: APIReference
+    url: https://marginalia.polycode.co.uk/api/openapi.json
+  - type: Sandbox
+    url: sandbox/polycode-co-uk-sandbox.yml
+- aid: polycode-co-uk:polycode-co-uk-keys-api
+  name: Polycode Keys API
+  description: The Keys API from Polycode — 2 operation(s) for keys.
+  humanURL: https://marginalia.polycode.co.uk/developers
+  baseURL: https://marginalia.polycode.co.uk/api
+  tags:
+  - Keys
+  properties:
+  - type: OpenAPI
+    url: openapi/polycode-co-uk-keys-api-openapi.yml
+  - type: Documentation
+    url: https://marginalia.polycode.co.uk/developers
+  - type: APIReference
+    url: https://marginalia.polycode.co.uk/api/openapi.json
+  - type: Sandbox
+    url: sandbox/polycode-co-uk-sandbox.yml
+- aid: polycode-co-uk:polycode-co-uk-me-api
+  name: Polycode Me API
+  description: The Me API from Polycode — 1 operation(s) for me.
+  humanURL: https://marginalia.polycode.co.uk/developers
+  baseURL: https://marginalia.polycode.co.uk/api
+  tags:
+  - Me
+  properties:
+  - type: OpenAPI
+    url: openapi/polycode-co-uk-me-api-openapi.yml
+  - type: Documentation
+    url: https://marginalia.polycode.co.uk/developers
+  - type: APIReference
+    url: https://marginalia.polycode.co.uk/api/openapi.json
+  - type: Sandbox
+    url: sandbox/polycode-co-uk-sandbox.yml
+- aid: polycode-co-uk:polycode-co-uk-openapi-json-api
+  name: Polycode Openapi.json API
+  description: The Openapi.json API from Polycode — 1 operation(s) for openapi.json.
+  humanURL: https://marginalia.polycode.co.uk/developers
+  baseURL: https://marginalia.polycode.co.uk/api
+  tags:
+  - Openapi.json
+  properties:
+  - type: OpenAPI
+    url: openapi/polycode-co-uk-openapi-json-api-openapi.yml
+  - type: Documentation
+    url: https://marginalia.polycode.co.uk/developers
+  - type: APIReference
+    url: https://marginalia.polycode.co.uk/api/openapi.json
+  - type: Sandbox
+    url: sandbox/polycode-co-uk-sandbox.yml
+- aid: polycode-co-uk:polycode-co-uk-project-api
+  name: Polycode Project API
+  description: The Project API from Polycode — 1 operation(s) for project.
+  humanURL: https://marginalia.polycode.co.uk/developers
+  baseURL: https://marginalia.polycode.co.uk/api
+  tags:
+  - Project
+  properties:
+  - type: OpenAPI
+    url: openapi/polycode-co-uk-project-api-openapi.yml
+  - type: Documentation
+    url: https://marginalia.polycode.co.uk/developers
+  - type: APIReference
+    url: https://marginalia.polycode.co.uk/api/openapi.json
+  - type: Sandbox
+    url: sandbox/polycode-co-uk-sandbox.yml
+- aid: polycode-co-uk:polycode-co-uk-projects-api
+  name: Polycode Projects API
+  description: The Projects API from Polycode — 3 operation(s) for projects.
+  humanURL: https://marginalia.polycode.co.uk/developers
+  baseURL: https://marginalia.polycode.co.uk/api
+  tags:
+  - Projects
+  properties:
+  - type: OpenAPI
+    url: openapi/polycode-co-uk-projects-api-openapi.yml
+  - type: Documentation
+    url: https://marginalia.polycode.co.uk/developers
+  - type: APIReference
+    url: https://marginalia.polycode.co.uk/api/openapi.json
+  - type: Sandbox
+    url: sandbox/polycode-co-uk-sandbox.yml
+- aid: polycode-co-uk:polycode-co-uk-sessions-api
+  name: Polycode Sessions API
+  description: The Sessions API from Polycode — 2 operation(s) for sessions.
+  humanURL: https://marginalia.polycode.co.uk/developers
+  baseURL: https://marginalia.polycode.co.uk/api
+  tags:
+  - Sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/polycode-co-uk-sessions-api-openapi.yml
+  - type: Documentation
+    url: https://marginalia.polycode.co.uk/developers
+  - type: APIReference
+    url: https://marginalia.polycode.co.uk/api/openapi.json
+  - type: Sandbox
+    url: sandbox/polycode-co-uk-sandbox.yml
+- aid: polycode-co-uk:polycode-co-uk-status-api
+  name: Polycode Status API
+  description: The Status API from Polycode — 1 operation(s) for status.
+  humanURL: https://marginalia.polycode.co.uk/developers
+  baseURL: https://marginalia.polycode.co.uk/api
+  tags:
+  - Status
+  properties:
+  - type: OpenAPI
+    url: openapi/polycode-co-uk-status-api-openapi.yml
+  - type: Documentation
+    url: https://marginalia.polycode.co.uk/developers
+  - type: APIReference
+    url: https://marginalia.polycode.co.uk/api/openapi.json
+  - type: Sandbox
+    url: sandbox/polycode-co-uk-sandbox.yml
+- aid: polycode-co-uk:polycode-co-uk-test-api
+  name: Polycode Test API
+  description: The Test API from Polycode — 1 operation(s) for test.
+  humanURL: https://marginalia.polycode.co.uk/developers
+  baseURL: https://marginalia.polycode.co.uk/api
+  tags:
+  - Test
+  properties:
+  - type: OpenAPI
+    url: openapi/polycode-co-uk-test-api-openapi.yml
+  - type: Documentation
+    url: https://marginalia.polycode.co.uk/developers
+  - type: APIReference
+    url: https://marginalia.polycode.co.uk/api/openapi.json
+  - type: Sandbox
+    url: sandbox/polycode-co-uk-sandbox.yml
+- aid: polycode-co-uk:polycode-co-uk-usage-api
+  name: Polycode Usage API
+  description: The Usage API from Polycode — 2 operation(s) for usage.
+  humanURL: https://marginalia.polycode.co.uk/developers
+  baseURL: https://marginalia.polycode.co.uk/api
+  tags:
+  - Usage
+  properties:
+  - type: OpenAPI
+    url: openapi/polycode-co-uk-usage-api-openapi.yml
+  - type: Documentation
+    url: https://marginalia.polycode.co.uk/developers
+  - type: APIReference
+    url: https://marginalia.polycode.co.uk/api/openapi.json
+  - type: Sandbox
+    url: sandbox/polycode-co-uk-sandbox.yml
+- aid: polycode-co-uk:polycode-co-uk-visitor-api
+  name: Polycode Visitor API
+  description: The Visitor API from Polycode — 2 operation(s) for visitor.
+  humanURL: https://marginalia.polycode.co.uk/developers
+  baseURL: https://marginalia.polycode.co.uk/api
+  tags:
+  - Visitor
+  properties:
+  - type: OpenAPI
+    url: openapi/polycode-co-uk-visitor-api-openapi.yml
+  - type: Documentation
+    url: https://marginalia.polycode.co.uk/developers
+  - type: APIReference
+    url: https://marginalia.polycode.co.uk/api/openapi.json
+  - type: Sandbox
+    url: sandbox/polycode-co-uk-sandbox.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/polycode-co-uk-marginalia-overlay.yaml
 - type: Website
   url: https://marginalia.polycode.co.uk/
 - type: DeveloperPortal
@@ -192,3 +457,11 @@ x-enrichment:
   status: enriched
   artifacts_added: 26
   pass: local-v3
+x-legal-name: Polycode Limited
+x-a2a:
+  verified: true
+  probed: '2026-09-26'
+  url: "https://marginalia.polycode.co.uk/.well-known/agent-card.json"
+  grade: "conformant"
+  protocol_version: "0.3.0"
+  control: 403
