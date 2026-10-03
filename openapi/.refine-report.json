@@ -1,7 +1,7 @@
 {
   "provider": "polycode-co-uk",
   "sources": [
-    "polycode-co-uk-marginalia-openapi.json"
+    "_original/polycode-co-uk-marginalia-openapi.json"
   ],
   "outputs": [
     "polycode-co-uk-admin-api-openapi.yml",
@@ -23,12 +23,11 @@
     "polycode-co-uk-usage-api-openapi.yml",
     "polycode-co-uk-visitor-api-openapi.yml"
   ],
-  "archived": [
-    "archived openapi/polycode-co-uk-marginalia-openapi.json"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "polycode-co-uk-marginalia-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
     "polycode-co-uk-marginalia-openapi.json: tagged paths GET /api/graphs/default -> Graphs",
     "polycode-co-uk-marginalia-openapi.json: tagged paths GET /api/graphs -> Graphs",
@@ -98,7 +97,26 @@
     "polycode-co-uk-marginalia-openapi.json: declared missing tag: Test",
     "polycode-co-uk-marginalia-openapi.json: declared missing tag: Usage",
     "polycode-co-uk-marginalia-openapi.json: declared missing tag: Visitor",
-    "apis.yml register: written (+18 apis, 19 total)"
+    "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "polycode-co-uk-admin-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "polycode-co-uk-budget-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "polycode-co-uk-chat-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "polycode-co-uk-diverts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "polycode-co-uk-flag-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "polycode-co-uk-graph-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "polycode-co-uk-graphs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "polycode-co-uk-hooks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "polycode-co-uk-keys-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "polycode-co-uk-me-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "polycode-co-uk-openapi-json-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "polycode-co-uk-project-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "polycode-co-uk-projects-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "polycode-co-uk-sessions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "polycode-co-uk-status-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "polycode-co-uk-test-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "polycode-co-uk-usage-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "polycode-co-uk-visitor-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
