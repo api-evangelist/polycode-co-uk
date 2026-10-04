@@ -88,6 +88,8 @@ apis:
   humanURL: https://marginalia.polycode.co.uk/developers
   baseURL: https://marginalia.polycode.co.uk/api
   tags:
+  - Budgets
+  tags_raw:
   - Budget
   properties:
   - type: OpenAPI
@@ -264,6 +266,8 @@ apis:
   humanURL: https://marginalia.polycode.co.uk/developers
   baseURL: https://marginalia.polycode.co.uk/api
   tags:
+  - Project
+  tags_raw:
   - Projects
   properties:
   - type: OpenAPI
@@ -311,7 +315,8 @@ apis:
   description: The Test API from Polycode — 1 operation(s) for test.
   humanURL: https://marginalia.polycode.co.uk/developers
   baseURL: https://marginalia.polycode.co.uk/api
-  tags:
+  tags: []
+  tags_raw:
   - Test
   properties:
   - type: OpenAPI
@@ -360,6 +365,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/polycode-co-uk-capability-edges.yml
+  name: Polycode Business Capability Map
 - type: Overlay
   url: overlays/polycode-co-uk-marginalia-overlay.yaml
 - type: Website
