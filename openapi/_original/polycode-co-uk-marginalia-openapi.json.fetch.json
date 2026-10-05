@@ -1,0 +1,12 @@
+{
+ "url": "https://marginalia.polycode.co.uk/api/openapi.json",
+ "requested_url": "https://marginalia.polycode.co.uk/api/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 21582,
+ "sha256": "3b87cb2ac61402a43d34d06aebaaa415e78fb6095d31972392d61f6f26d3e026",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}
